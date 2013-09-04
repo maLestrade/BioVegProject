@@ -6,7 +6,7 @@
 *.ear
 
 # Non-maven lib accepted in lib/
-!lib/*.jar
+!BioVegProject/lib/*.jar
 
 # Maven
 /target
