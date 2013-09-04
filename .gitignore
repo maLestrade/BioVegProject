@@ -1,0 +1,20 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Non-maven lib accepted in lib/
+!lib/*.jar
+
+# Maven
+/target
+
+# Eclipse
+.settings
+.project 
+.classpath
+
+# Netbeans
+nbactions.xml
