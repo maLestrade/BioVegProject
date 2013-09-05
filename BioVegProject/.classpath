@@ -14,5 +14,23 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/bbop.jar"/>
+	<classpathentry kind="lib" path="lib/ecp1_0beta.jar"/>
+	<classpathentry kind="lib" path="lib/ensj.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta-oro-2.0.6.jar"/>
+	<classpathentry kind="lib" path="lib/jaxp.jar"/>
+	<classpathentry kind="lib" path="lib/jnlp.jar"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/macify-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-3.1.8-bin.jar"/>
+	<classpathentry kind="lib" path="lib/obo.jar"/>
+	<classpathentry kind="lib" path="lib/oboedit.jar"/>
+	<classpathentry kind="lib" path="lib/org.mortbay.jetty.jar"/>
+	<classpathentry kind="lib" path="lib/patbinfree153.jar"/>
+	<classpathentry kind="lib" path="lib/pg74.213.jdbc3.jar"/>
+	<classpathentry kind="lib" path="lib/psgr2.jar"/>
+	<classpathentry kind="lib" path="lib/servlet-tomcat.jar"/>
+	<classpathentry kind="lib" path="lib/te-common.jar"/>
+	<classpathentry kind="lib" path="lib/xerces.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
