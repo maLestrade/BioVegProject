@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Iterator;
-import java.util.Map;
 
 import org.biojava3.core.sequence.DNASequence;
 
@@ -16,6 +14,8 @@ import apollo.datamodel.FeatureSetI;
 import apollo.datamodel.SeqFeatureI;
 import apollo.datamodel.Sequence;
 import apollo.datamodel.StrandedFeatureSet;
+import core.primerblast.AdvancedPrimerBlast;
+import core.primerblast.AdvancedPrimerBlastOptions;
 
 public class Main {
 	
@@ -26,7 +26,7 @@ public class Main {
 		String seqRevComp = (new DNASequence(seq)).getReverseComplement().getSequenceAsString();
 		
 		CurationSet cs = null;
-		if(!file.exists()) {
+		if(!file.exists() ) { //|| true) {
 			cs = save();
 		}
 		else {
@@ -65,13 +65,6 @@ public class Main {
 					String primerSeq = (new DNASequence(hybridSite)).getComplement().getSequenceAsString();
 					
 					System.out.print(primerSeq+"\t");
-
-					System.out.print(level3.getProperties().size());
-					Iterator it = level3.getProperties().entrySet().iterator();
-					while(it.hasNext()) {
-						Map.Entry entry = (Map.Entry) it.next();
-						System.out.print(entry.getKey()+"-"+entry.getValue());
-					}
 					
 					System.out.println();
 				}
@@ -106,16 +99,30 @@ public class Main {
 	
 	public static CurationSet save() throws Exception {
 		
-		RemotePrimerBlastNCBI.PrimerBlastOptions opt = new RemotePrimerBlastNCBI.PrimerBlastOptions();
-		opt.setPrimerOptTm(60.0);
-		opt.setPrimerMaxDiffTm(3.0);
+		AdvancedPrimerBlastOptions opt = new AdvancedPrimerBlastOptions();
+
 		opt.setPrimerProductMin(300);
 		opt.setPrimerProductMax(400);
+		
+		opt.setPrimerNumReturn(7002467);
+		
+		opt.setPrimerMinTm(57.0);
+		opt.setPrimerOptTm(60.0);
+		opt.setPrimerMaxTm(63.0);
+		opt.setPrimerMaxDiffTm(3.0);
+		
 		opt.setSearchSpecificPrimer(true);
 		opt.setPrimerSpecificityDatabase(RemotePrimerBlastNCBI.PrimerBlastOptions.Database.nt);
 		opt.setOrganism("29760");
 		
-		RemotePrimerBlastNCBI rp = new RemotePrimerBlastNCBI(opt);
+		opt.setPrimerSizeMin(18);
+		opt.setPrimerSizeOpt(20);
+		opt.setPrimerSizeMax(22);
+		
+		opt.setGCMin(40);
+		opt.setGCMax(60);
+		
+		AdvancedPrimerBlast rp = new AdvancedPrimerBlast(opt);
 
 		Sequence seq = new Sequence("GSVIVT01019504001", "atacagccatctttctggtttttccctctctctctctctctctcatttaaccatggctgagactgttattgaaatccccatggctgttccgataaagaaggcaaggaccagcaggaaggcgctgaaggagaagagctcttcaacgaataaggcaaacatcttggccggacagatctcagagtcctctccggcgccagttccgacgccgtctgaggacgccggaaaggagaaccacgagagcctgtcacagcctctgtccgggaagaagaagagtaaaggggctcagaaagggaagaaatcgaaggagtcccagtcgtttgagagggacttgcaagaaatgcaggaaaagcttgagcaattgcggcttgagaaggagaagacggaggagttattgaaggctagagacgagatgttgaagatcaaggaggaagagctcgagacaaggggtcgagagcaggagaagcttcagatggagttgaagaaattgcagaagttgaaggagttcaaacccaccgtggttcgttttcttgatttctttctccattcccccccccccccccctttttttgtgtttggtgtccaagaatattgaagtgtggaaaaagtaattttgaattttatggtttaatggatatttctttattggaatctttcttgatattctttttaatttccttttctttccagcgtttttactagcaaacaaccagactattaattcctttgcatatctgggttttaagtattagatttcattttcttgaccttcttcagattctttcttaagtttgttagttttttttttcttccattttattagcaaccaaacagaccattgtgattcttgatttctgctttcaagggtttgatttgatttttatcggtctttctttggatattcccttttaatttcactttcctgatctttctttcagacatttccacttcactctctgagagataaagaacaagaaaagaaggagaagaacaaaaagggctgcccagaaacgaaaaggccatctccgtcatatgtactctggtgcaaggatcagtggaatgaggtaaatgagagaaaataggttccgaagaagaaattgaatttgactccaaaacctagaaattcatctgtatttttgaacgtaggccaagaaagcaaaccccgatgcagacttcaaggagatctcaaatattttgggggctaaatggaagacaatcagcgcagaagagaagaagccatatgaggagaagtatcaggctgagaaggaagcctatttgcagatagtggggaaggagaagcgcgaaaatgaagccatgaggctgttggaagaggagcagaagcagaagacagctatggagttgcttgagcaatatctccagttcaaacagggagcagaaaaggagaacaagaagaaaaagtaaagccccattaatctccccccttcctctgttccattctgaaaattttctctttttttttagaaaaggacccgctaatctccctcgcttcctctctgcttctctctaatttttttctcaactcttttacaggaaagagaaggacccattgaaaccgaagcatcctgtatcagcattttttttgttctcaaaggaaaggcgagcagctctgcttggagaggataagaatgttttagaggtagctgatgattagaatctgggtggttttttttttttttttttctctcttggaattcgtttctactgatttgagctaatttgaaggttgggtattttgatagattgccaagattgctggtgaagagtggaagaacatgacggagaagcagaaacgcccttacgaagaggttcatctcatgacctctctgtttctgtctttgtttctctctgcagcttggtctcttacaatttccatcgaaaacttgcagattgcaaagaaaaataaggcaaagtatcaggaagaaatggagttgtacaaacagcagaaggatgaagaagctgaagatctcaagaagggagaggaggagcagatgaaaatccagaaacatgaagcattacaactgctcaagaagaaagaaaaaaccgaaaatataatcaaggttcttcaacgttgtcaccataaatttgtgggtattgttggtttcaaaacttattcagcagctaatctgtggtttgaatatagaaaaccaaggagaatcgccagaagaagaagaagcagaaggaaaaggccaactctgatccaaacaagcctaagaagccggcatcctcattcctcctattcaggtatatatcaatcagggatatttttcgggattttctggctttttagattatgattcaataaggaaattgttcttgttctctgcagcaaagaagcaaggaatagtttcctgcaagagcgaccaggaataaacaattccaccctcaatgctctgatttcagtgaaatggaaggtattatcatttctcctttctcttttggagtgtgacattgagaatttctgtaagtttctatttgcaaatttacccatttgggccgttttgtacaggagttggatgaggaagagaggaaaatctggaatgacaaagctaaggaagctatggaagcataccagaaggaactagaggaatataacaagtctgctgcaaccatatctgacaagccacagcaatgaagaatgtgaagtgctgttgatgttcaagtggttatgttgaacataaagtagaacgtctggccttcaagttcactggcccttttttggttgatcagtattctgttatcttgcaatttcttaggatgtttttgttgccaactgatggaaaatctgcaaaaaattctcacatgttgcgagtcttgagattgactgattgttggaaaaagcaaattccaaaaattccaattctggattttccctttcattaatgaaatctaaatggcccttgcctacgtttccatt");
 
