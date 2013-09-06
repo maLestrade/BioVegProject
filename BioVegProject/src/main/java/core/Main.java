@@ -6,8 +6,12 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.swing.JFrame;
+
 import org.biojava3.core.sequence.DNASequence;
 
+import ui.filechooser.FileChooserField;
+import ui.filechooser.SequenceFileChooser;
 import apollo.analysis.RemotePrimerBlastNCBI;
 import apollo.datamodel.CurationSet;
 import apollo.datamodel.FeatureSetI;
