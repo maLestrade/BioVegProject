@@ -120,7 +120,7 @@
 			<artifactId>jakarta-oro</artifactId>
 			<version>2.0.8</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.berkeleybop</groupId>
 			<artifactId>apollo</artifactId>
@@ -136,6 +136,13 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/te-common.jar</systemPath>
 		</dependency>
+
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<!-- Repository specifications -->
