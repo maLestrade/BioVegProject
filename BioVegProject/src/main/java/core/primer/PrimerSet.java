@@ -12,9 +12,10 @@ public class PrimerSet {
 	public ArrayList<PrimerCouple> getPrimerCouples() {
 		return primerCouples;
 	}
-
-	public void setPrimerCouples(ArrayList<PrimerCouple> primerCouples) {
-		this.primerCouples = primerCouples;
+	
+	public void addPrimerCouple(Primer forward, Primer reverse) {
+		this.primerCouples.add(new PrimerCouple(forward, reverse));
+		
 	}
 	
 	

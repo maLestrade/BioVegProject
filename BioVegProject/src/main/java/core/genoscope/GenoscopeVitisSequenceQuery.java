@@ -19,67 +19,62 @@ public class GenoscopeVitisSequenceQuery {
 		this.protAccNum = protAccNum;
 	}
 
-	public AnnotatedSequence getSequence() {
-		try {
-			String url = "http://www.genoscope.cns.fr/cgi-bin/ggb/vitis/12X/geneView?src=vitis&name=";
-			//System.out.println("Numéro d'accession : "+protAccNum+"\n");
+	public AnnotatedSequence getAnnotatedSequence() throws Exception {
+		String url = "http://www.genoscope.cns.fr/cgi-bin/ggb/vitis/12X/geneView?src=vitis&name=";
+		//System.out.println("Numéro d'accession : "+protAccNum+"\n");
 
-			Document doc = Jsoup.connect(url+protAccNum).get();
+		Document doc = Jsoup.connect(url+protAccNum).get();
 
-			AnnotatedSequence seq = new AnnotatedSequence();
+		AnnotatedSequence seq = new AnnotatedSequence();
 
-			Elements pre = doc.select("span.sequence pre");
+		Elements pre = doc.select("span.sequence pre");
 
-			List<Node> seqParts = pre.get(0).childNodes();
-			if(seqParts.size() > 1) {
-				int i = 1, pos = 1;
-				String sequence = null;
-				SequencePartType type = null;
-				Node part = null;
-				
-				part = seqParts.get(i);
-				if(part.childNodeSize() >= 1) {
-					if(part.toString().contains("#A9A9A9")) {
-						sequence = part.childNode(0).toString().replace("\n", "");
-						type = SequencePartType.UTR5;
-						pos = addSequencePart(seq, sequence, pos, type);
-						i++;
-					}
-				}
-				
-				while(i < seqParts.size()-1) {
-					part = seqParts.get(i);
+		List<Node> seqParts = pre.get(0).childNodes();
+		if(seqParts.size() > 1) {
+			int i = 1, pos = 1;
+			String sequence = null;
+			SequencePartType type = null;
+			Node part = null;
 
-					if (part.childNodeSize() >= 1 && part.toString().contains("#FF0000")) {
-						sequence = part.childNode(0).toString().replace("\n", "");;
-						type = SequencePartType.EXON;
-					}
-					else {
-						sequence = part.toString().replace("\n", "");;
-						type = SequencePartType.INTRON;
-					}
-
-					if(sequence != null) 
-						pos = addSequencePart(seq, sequence, pos, type);
+			part = seqParts.get(i);
+			if(part.childNodeSize() >= 1) {
+				if(part.toString().contains("#A9A9A9")) {
+					sequence = part.childNode(0).toString().replace("\n", "");
+					type = SequencePartType.UTR5;
+					pos = addSequencePart(seq, sequence, pos, type);
 					i++;
-				}
-				
-				part = seqParts.get(i);
-				if(part.childNodeSize() >= 1) {
-					if(part.toString().contains("#A9A9A9")) {
-						sequence = part.childNode(0).toString().replace("\n", "");
-						type = SequencePartType.UTR3;
-						pos = addSequencePart(seq, sequence, pos, type);
-						i++;
-					}
 				}
 			}
 
-			return seq;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}	
+			while(i < seqParts.size()-1) {
+				part = seqParts.get(i);
+
+				if (part.childNodeSize() >= 1 && part.toString().contains("#FF0000")) {
+					sequence = part.childNode(0).toString().replace("\n", "");;
+					type = SequencePartType.EXON;
+				}
+				else {
+					sequence = part.toString().replace("\n", "");;
+					type = SequencePartType.INTRON;
+				}
+
+				if(sequence != null) 
+					pos = addSequencePart(seq, sequence, pos, type);
+				i++;
+			}
+
+			part = seqParts.get(i);
+			if(part.childNodeSize() >= 1) {
+				if(part.toString().contains("#A9A9A9")) {
+					sequence = part.childNode(0).toString().replace("\n", "");
+					type = SequencePartType.UTR3;
+					pos = addSequencePart(seq, sequence, pos, type);
+					i++;
+				}
+			}
+		}
+
+		return seq;
 	}
 
 	private int addSequencePart(AnnotatedSequence seq, String sequence, int pos, SequencePartType type) {

@@ -9,6 +9,7 @@ import apollo.datamodel.SeqFeatureI;
 import apollo.datamodel.Sequence;
 import apollo.datamodel.StrandedFeatureSet;
 import core.primer.Primer;
+import core.primer.PrimerCouple;
 import core.primer.PrimerSet;
 import core.primerblast.AdvancedPrimerBlast;
 import core.primerblast.AdvancedPrimerBlastOptions;
@@ -26,14 +27,6 @@ public class VitisPrimerQuery {
 		this.initAdvancedPrimerBlastOptions();
 		this.rp = new AdvancedPrimerBlast(opt);
 		this.sequence = new Sequence(numAcc, seq);
-	}
-	
-	public void runAnalysis() throws Exception {
-		this.cs = new CurationSet();
-		cs.setResults(new StrandedFeatureSet());
-		cs.setRefSequence(this.sequence);
-		
-		rp.runAnalysis(cs, this.sequence, 1);
 	}
 	
 	private void initAdvancedPrimerBlastOptions() {
@@ -62,53 +55,48 @@ public class VitisPrimerQuery {
 		
 	}
 	
-	public void plopynounetnounetnounet(){
+	public void runAnalysis() throws Exception {
+		this.cs = new CurationSet();
+		cs.setResults(new StrandedFeatureSet());
+		cs.setRefSequence(this.sequence);
+		
+		rp.runAnalysis(cs, this.sequence, 1);
+		
+		this.retrievePrimers();
+	}
+	
+	private void retrievePrimers(){
 		String seqRevComp = (new DNASequence(this.sequence.getResidues())).getReverseComplement().getSequenceAsString();
 		
 		this.primerSet = new PrimerSet();
 		
-		// TODO : modify this code to treat forward and reverse separately
+		FeatureSetI level0Forward = cs.getResults().getForwardSet();
+		FeatureSetI level0Reverse = cs.getResults().getReverseSet();
 		
-		FeatureSetI level0 = cs.getResults().getForwardSet();
-		for(int i = 0; i < level0.size(); i++) {
-			SeqFeatureI level1 = level0.deleteFeatureAt(i);
+		for(int i = 0; i < level0Forward.size(); i++) {
+			SeqFeatureI level1Forward = level0Forward.deleteFeatureAt(i);
+			SeqFeatureI level1Reverse = level0Reverse.deleteFeatureAt(i);
 			
-			//For each plus strand primer couple
-			for(int j = 0; j < level1.size(); j++) {
-				SeqFeatureI level2 = level1.getFeatureAt(j);
+			// For each primer couple
+			for(int j = 0; j < level1Forward.size(); j++) {
+				SeqFeatureI level2Forward = level1Forward.getFeatureAt(j);
+				SeqFeatureI level2Reverse = level1Reverse.getFeatureAt(j);
 				
-				// TODO : instantiate a primer couple
-							
-				//For each plus strand primer
-				for(int k = 0; k < level2.size(); k++) {
-					SeqFeatureI level3 = level2.getFeatureAt(k);
-						
-					String name = level3.getName();
-					String strand = "";
-					if(name.contains("forward")) {
-						strand = this.sequence.getResidues();
-					}
-					else {
-						strand = seqRevComp;
-					}
-					
-//					System.out.print(level3.getName()+"\t");
-//					System.out.print(level3.getStart()+"-"+level3.getEnd()+"\t");
-					
-					String hybridSite = strand.substring(level3.getStart(), level3.getEnd());
-					String primerSeq = (new DNASequence(hybridSite)).getComplement().getSequenceAsString();
-										
-//					System.out.print(primerSeq+"\t");
-//					
-//					System.out.println();
-					
-					Primer primer = new Primer(name, level3.getStart(), level3.getEnd(), hybridSite, primerSeq);
-					
-					// TODO : add this primer to the primer couple
-				}
-//				System.out.println();
+				// Forward primer
+				SeqFeatureI level3Forward = level2Forward.getFeatureAt(0);
+				String strand = this.sequence.getResidues();
+				String hybridSite = strand.substring(level3Forward.getStart(), level3Forward.getEnd());
+				String primerSeq = (new DNASequence(hybridSite)).getComplement().getSequenceAsString();
+				Primer primerForward = new Primer(level3Forward.getName(), level3Forward.getStart(), level3Forward.getEnd(), hybridSite, primerSeq);
 				
-				// TODO : add this primer couple to the primer set
+				// Reverse primer
+				SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(0);
+				strand = seqRevComp;
+				hybridSite = (new DNASequence(strand.substring(level3Reverse.getStart(), level3Reverse.getEnd()))).getReverse().getSequenceAsString();
+				primerSeq = (new DNASequence(hybridSite)).getComplement().getSequenceAsString();
+				Primer primerReverse = new Primer(level3Reverse.getName(), level3Reverse.getStart(), level3Reverse.getEnd(), hybridSite, primerSeq);
+				
+				this.primerSet.addPrimerCouple(primerForward, primerReverse);
 			}
 		}
 	}
