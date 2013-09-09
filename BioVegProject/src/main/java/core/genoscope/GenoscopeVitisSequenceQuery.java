@@ -8,21 +8,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
-import sequence.Sequence;
-import sequence.SequencePartType;
+import core.sequence.Sequence;
+import core.sequence.SequencePartType;
 
-public class GenoscopeSequenceQuery {
+public class GenoscopeVitisSequenceQuery {
 
 	private final String protAccNum; 
 
-	public GenoscopeSequenceQuery(String protAccNum) {
+	public GenoscopeVitisSequenceQuery(String protAccNum) {
 		this.protAccNum = protAccNum;
 	}
 
 	public Sequence getSequence() {
 		try {
 			String url = "http://www.genoscope.cns.fr/cgi-bin/ggb/vitis/12X/geneView?src=vitis&name=";
-			System.out.println("Numéro d'accession : "+protAccNum+"\n");
+			//System.out.println("Numéro d'accession : "+protAccNum+"\n");
 
 			Document doc = Jsoup.connect(url+protAccNum).get();
 

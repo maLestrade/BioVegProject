@@ -1,4 +1,4 @@
-package sequence;
+package core.sequence;
 
 public class SequencePart {
 	

@@ -1,4 +1,4 @@
-package sequence;
+package core.sequence;
 
 import java.util.ArrayList;
 

@@ -72,28 +72,6 @@ public class Main {
 			}
 		}
 		
-		/*
-		System.out.println("\nreverse");
-		level0 = cs.getResults().getReverseSet();
-		for(int i = 0; i < level0.size(); i++) {
-			SeqFeatureI level1 = level0.deleteFeatureAt(i);
-			
-			for(int j = 0; j < level1.size(); j++) {
-				SeqFeatureI level2 = level1.getFeatureAt(j);
-
-				for(int k = 0; k < level2.size(); k++) {
-					SeqFeatureI level3 = level2.getFeatureAt(k);
-						
-					System.out.print(level3.getName()+"\t");
-					System.out.print(level3.getStart()+"-"+level3.getEnd()+"\t");
-					//System.out.println(seqRevComp.substring(level3.getEnd(), level3.getStart()));
-				}
-				System.out.println();
-			}
-		}
-		*/
-		
-		System.out.println("toto");
 	}
 
 	
