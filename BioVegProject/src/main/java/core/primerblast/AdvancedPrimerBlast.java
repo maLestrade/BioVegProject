@@ -4,16 +4,35 @@ import java.io.UnsupportedEncodingException;
 
 import apollo.analysis.RemotePrimerBlastNCBI;
 
+/**
+ * Class to use primerblast
+ * Inherits from apollo program
+ * @author pidupuis, gcornut
+ *
+ */
 public class AdvancedPrimerBlast extends RemotePrimerBlastNCBI {
 
+	/**
+	 * opts : AdvancedPrimerBlastOptions
+	 * Variable which define the primer blast options
+	 */
 	private AdvancedPrimerBlastOptions opts;
 
+	/**
+	 * Constructor using fields
+	 * @param opts : AdvancedPrimerBlastOptions
+	 */
 	public AdvancedPrimerBlast(AdvancedPrimerBlastOptions opts) {
 		super(opts);
 		this.opts = opts;
 	}
 
 	@Override
+	/**
+	 * Method which process the options
+	 * @param buf : StringBuilder
+	 * @throws UnsupportedEncodingException
+	 */
 	public void processOptions(StringBuilder buf) throws UnsupportedEncodingException {
 		buf.append("PRIMER5_START=" + convertOptionToString(opts.getPrimer5Start()) + "&");
 		buf.append("PRIMER5_END=" + convertOptionToString(opts.getPrimer5End()) + "&");
@@ -35,11 +54,9 @@ public class AdvancedPrimerBlast extends RemotePrimerBlastNCBI {
 		buf.append("PRIMER_3END_SPECIFICITY_MISMATCH=" + convertOptionToString(opts.getPrimer3endSpecificityMismatch()) + "&");
 		buf.append("MISMATCH_REGION_LENGTH=" + convertOptionToString(opts.getMismatchRegionLength()) + "&");
 		buf.append("PRODUCT_SIZE_DEVIATION=" + convertOptionToString(opts.getProductSizeDeviation()) + "&");
-
 		buf.append("PRIMER_MIN_SIZE=" + convertOptionToString(opts.getPrimerSizeMin()) + "&");
 		buf.append("PRIMER_OPT_SIZE=" + convertOptionToString(opts.getPrimerSizeOpt()) + "&");
 		buf.append("PRIMER_MAX_SIZE=" + convertOptionToString(opts.getPrimerSizeMax()) + "&");
-		
 		buf.append("PRIMER_MIN_GC=" + convertOptionToString(opts.getGCMin()) + "&");
 		buf.append("PRIMER_MAX_GC=" + convertOptionToString(opts.getGCMax()) + "&");
 		

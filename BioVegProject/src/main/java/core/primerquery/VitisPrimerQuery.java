@@ -1,7 +1,6 @@
 package core.primerquery;
 
 import org.biojava3.core.sequence.DNASequence;
-
 import apollo.analysis.RemotePrimerBlastNCBI;
 import apollo.datamodel.CurationSet;
 import apollo.datamodel.FeatureSetI;
@@ -9,11 +8,9 @@ import apollo.datamodel.SeqFeatureI;
 import apollo.datamodel.Sequence;
 import apollo.datamodel.StrandedFeatureSet;
 import core.primer.Primer;
-import core.primer.PrimerCouple;
 import core.primer.PrimerSet;
 import core.primerblast.AdvancedPrimerBlast;
 import core.primerblast.AdvancedPrimerBlastOptions;
-
 
 public class VitisPrimerQuery {
 	
@@ -23,6 +20,16 @@ public class VitisPrimerQuery {
 	private CurationSet cs;
 	private PrimerSet primerSet;
 	
+	public VitisPrimerQuery(Sequence sequence, AdvancedPrimerBlastOptions opt,
+			AdvancedPrimerBlast rp, CurationSet cs, PrimerSet primerSet) {
+		super();
+		this.sequence = sequence;
+		this.opt = opt;
+		this.rp = rp;
+		this.cs = cs;
+		this.primerSet = primerSet;
+	}
+
 	public VitisPrimerQuery(String numAcc, String seq) {
 		this.initAdvancedPrimerBlastOptions();
 		this.rp = new AdvancedPrimerBlast(opt);
@@ -66,6 +73,11 @@ public class VitisPrimerQuery {
 	}
 	
 	private void retrievePrimers(){
+		// TODO : forward plus : in primer blast, the primer sequence displayed is the hybridization site
+		// TODO : reverse minus : reverse or complement problem
+		
+		// TODO : check position of primers (2 nucleotides of the forward primer)
+		
 		String seqRevComp = (new DNASequence(this.sequence.getResidues())).getReverseComplement().getSequenceAsString();
 		
 		this.primerSet = new PrimerSet();
@@ -90,7 +102,7 @@ public class VitisPrimerQuery {
 				Primer primerForward = new Primer(level3Forward.getName(), level3Forward.getStart(), level3Forward.getEnd(), hybridSite, primerSeq);
 				
 				// Reverse primer
-				SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(0);
+				SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(1);
 				strand = seqRevComp;
 				hybridSite = (new DNASequence(strand.substring(level3Reverse.getStart(), level3Reverse.getEnd()))).getReverse().getSequenceAsString();
 				primerSeq = (new DNASequence(hybridSite)).getComplement().getSequenceAsString();
