@@ -85,14 +85,15 @@ public class VitisPrimerQuery {
 				// Forward primer
 				SeqFeatureI level3Forward = level2Forward.getFeatureAt(0);
 				String strand = this.sequence.getResidues();
-				String hybridSite = strand.substring(level3Forward.getStart(), level3Forward.getEnd());
+				String hybridSite = strand.substring(level3Forward.getStart()-2, level3Forward.getEnd()-1);
 				String primerSeq = (new DNASequence(hybridSite)).getComplement().getSequenceAsString();
 				Primer primerForward = new Primer(level3Forward.getName(), level3Forward.getStart(), level3Forward.getEnd(), hybridSite, primerSeq);
 				
 				// Reverse primer
-				SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(0);
-				strand = seqRevComp;
-				hybridSite = (new DNASequence(strand.substring(level3Reverse.getStart(), level3Reverse.getEnd()))).getReverse().getSequenceAsString();
+				SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(1);
+				strand = (new DNASequence(this.sequence.getResidues())).getComplement().getSequenceAsString();
+				//hybridSite = (new DNASequence(strand.substring(level3Reverse.getEnd(), level3Reverse.getStart())) ).getReverse().getSequenceAsString();
+				hybridSite = (new DNASequence(strand.substring(level3Reverse.getEnd()-2, level3Reverse.getStart()-1))).getReverse().getSequenceAsString();
 				primerSeq = (new DNASequence(hybridSite)).getComplement().getSequenceAsString();
 				Primer primerReverse = new Primer(level3Reverse.getName(), level3Reverse.getStart(), level3Reverse.getEnd(), hybridSite, primerSeq);
 				
@@ -100,8 +101,32 @@ public class VitisPrimerQuery {
 			}
 		}
 	}
+
+	public Sequence getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(Sequence sequence) {
+		this.sequence = sequence;
+	}
+
+	public AdvancedPrimerBlastOptions getOpt() {
+		return opt;
+	}
+
+	public void setOpt(AdvancedPrimerBlastOptions opt) {
+		this.opt = opt;
+	}
+
+	public PrimerSet getPrimerSet() {
+		return primerSet;
+	}
+
+	public void setPrimerSet(PrimerSet primerSet) {
+		this.primerSet = primerSet;
+	}
 	
-	
+	 
 	
 	
 	
