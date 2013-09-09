@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
-import core.sequence.Sequence;
+import core.sequence.AnnotatedSequence;
 import core.sequence.SequencePartType;
 
 public class GenoscopeVitisSequenceQuery {
@@ -19,14 +19,14 @@ public class GenoscopeVitisSequenceQuery {
 		this.protAccNum = protAccNum;
 	}
 
-	public Sequence getSequence() {
+	public AnnotatedSequence getSequence() {
 		try {
 			String url = "http://www.genoscope.cns.fr/cgi-bin/ggb/vitis/12X/geneView?src=vitis&name=";
 			//System.out.println("Numéro d'accession : "+protAccNum+"\n");
 
 			Document doc = Jsoup.connect(url+protAccNum).get();
 
-			Sequence seq = new Sequence();
+			AnnotatedSequence seq = new AnnotatedSequence();
 
 			Elements pre = doc.select("span.sequence pre");
 
@@ -82,7 +82,7 @@ public class GenoscopeVitisSequenceQuery {
 		}	
 	}
 
-	private int addSequencePart(Sequence seq, String sequence, int pos, SequencePartType type) {
+	private int addSequencePart(AnnotatedSequence seq, String sequence, int pos, SequencePartType type) {
 		int end = pos + sequence.length() - 1;
 		seq.add(type, sequence, pos, end);
 		return end + 1;

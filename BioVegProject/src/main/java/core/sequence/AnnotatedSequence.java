@@ -2,12 +2,12 @@ package core.sequence;
 
 import java.util.ArrayList;
 
-public class Sequence {
+public class AnnotatedSequence {
 	
 	private static final long serialVersionUID = 1L;
 	private final ArrayList<SequencePart> sequenceParts;
 	
-	public Sequence() {
+	public AnnotatedSequence() {
 		sequenceParts = new ArrayList<SequencePart>();
 	}
 	
