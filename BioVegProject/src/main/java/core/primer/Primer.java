@@ -27,11 +27,6 @@ public class Primer {
 	 * sequence of the hybridation site (in 5'>3')
 	 */
 	private String hybridSite;
-	/**
-	 * primerSeq : String
-	 * sequence of the primer sequence (in 5'>3')
-	 */
-	private String primerSeq;
 	
 	/**
 	 * Constructor using fields
@@ -39,14 +34,12 @@ public class Primer {
 	 * @param start : String : position of the first nucleotide of the primer in the sequence
 	 * @param end : String : position of the last nucleotide of the primer in the sequence
 	 * @param hybridSite : String : sequence of the hybridation site (in 5'>3')
-	 * @param primerSeq : String : sequence of the primer sequence (in 5'>3')
 	 */
-	public Primer(String name, int start, int end, String hybridSite, String primerSeq) {
+	public Primer(String name, int start, int end, String hybridSite) {
 		this.name = name;
 		this.start = start;
 		this.end = end;
 		this.hybridSite = hybridSite;
-		this.primerSeq = primerSeq;
 	}
 
 	/**
@@ -112,22 +105,5 @@ public class Primer {
 	public void setHybridSite(String hybridSite) {
 		this.hybridSite = hybridSite;
 	}
-
-	/**
-	 * Getter which return the primer sequence
-	 * @return primerSeq : String
-	 */
-	public String getPrimerSeq() {
-		return primerSeq;
-	}
-
-	/**
-	 * Setter for the primer sequence
-	 * @param primerSeq : String
-	 */
-	public void setPrimerSeq(String primerSeq) {
-		this.primerSeq = primerSeq;
-	}
-	
 	
 }

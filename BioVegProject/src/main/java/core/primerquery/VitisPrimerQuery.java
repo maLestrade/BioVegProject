@@ -73,10 +73,9 @@ public class VitisPrimerQuery {
 	}
 	
 	private void retrievePrimers(){
-		// TODO : forward plus : in primer blast, the primer sequence displayed is the hybridization site
-		// TODO : reverse minus : reverse or complement problem
-		
-		// TODO : check position of primers (2 nucleotides of the forward primer)
+
+		// TODO : javadoc
+		// TODO : test with other sequences
 		
 		String seqRevComp = (new DNASequence(this.sequence.getResidues())).getReverseComplement().getSequenceAsString();
 		
@@ -98,17 +97,15 @@ public class VitisPrimerQuery {
 				SeqFeatureI level3Forward = level2Forward.getFeatureAt(0);
 				String strand = this.sequence.getResidues();
 				String hybridSite = strand.substring(level3Forward.getStart()-2, level3Forward.getEnd()-1);
-				String primerSeq = (new DNASequence(hybridSite)).getComplement().getSequenceAsString();
-				Primer primerForward = new Primer(level3Forward.getName(), level3Forward.getStart(), level3Forward.getEnd(), hybridSite, primerSeq);
+				
+				Primer primerForward = new Primer(level3Forward.getName(), level3Forward.getStart(), level3Forward.getEnd(), hybridSite);
 				
 				// Reverse primer
 				SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(1);
 				strand = (new DNASequence(this.sequence.getResidues())).getComplement().getSequenceAsString();
-				//hybridSite = (new DNASequence(strand.substring(level3Reverse.getEnd(), level3Reverse.getStart())) ).getReverse().getSequenceAsString();
 				hybridSite = (new DNASequence(strand.substring(level3Reverse.getEnd()-2, level3Reverse.getStart()-1))).getReverse().getSequenceAsString();
 
-				primerSeq = (new DNASequence(hybridSite)).getComplement().getSequenceAsString();
-				Primer primerReverse = new Primer(level3Reverse.getName(), level3Reverse.getStart(), level3Reverse.getEnd(), hybridSite, primerSeq);
+				Primer primerReverse = new Primer(level3Reverse.getName(), level3Reverse.getStart(), level3Reverse.getEnd(), hybridSite);
 				
 				this.primerSet.addPrimerCouple(primerForward, primerReverse);
 			}

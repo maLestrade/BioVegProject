@@ -82,7 +82,7 @@ public class GenoscopeVitisSequenceQuery {
 				i++;
 			}
 
-			// LAST Sequence (normally 3'UTR)
+			// LAST Sequence part (normally 3'UTR)
 			part = seqParts.get(i);
 			if(part.childNodeSize() >= 1) {
 				if(part.toString().contains("#A9A9A9")) { // Compare the string color with the one corresponding to the 3'UTR to be sure that that's the 3'UTR part
