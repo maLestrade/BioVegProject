@@ -10,15 +10,30 @@ import ui.filechooser.FileChooserField;
 import ui.filechooser.SequenceFileChooser;
 
 
-public class Process1 extends JFrame {
+public class Process2 extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Process1 frame = new Process1();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
 	/**
 	 * Create the frame.
 	 */
-	public Process1() {
+	public Process2() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 600);
 		
@@ -40,7 +55,7 @@ public class Process1 extends JFrame {
 		lblRechercheDamorces.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblRechercheDamorces);
 		
-		JLabel lblAccessNumber = new JLabel("Access Number : ");
+		JLabel lblAccessNumber = new JLabel("Sequence(s) : ");
 		lblAccessNumber.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAccessNumber.setBounds(10, 62, 95, 20);
 		contentPane.add(lblAccessNumber);
@@ -135,13 +150,12 @@ public class Process1 extends JFrame {
 		lblOr.setBounds(401, 65, 33, 14);
 		contentPane.add(lblOr);
 		
-		textField = new JTextField();
-		textField.setBounds(479, 65, 142, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
 		JLabel lblParameters = new JLabel("PARAMETERS");
 		lblParameters.setBounds(10, 122, 135, 14);
 		contentPane.add(lblParameters);
+		
+		JTextArea textArea_1 = new JTextArea();
+		textArea_1.setBounds(472, 45, 167, 50);
+		contentPane.add(textArea_1);
 	}
 }
