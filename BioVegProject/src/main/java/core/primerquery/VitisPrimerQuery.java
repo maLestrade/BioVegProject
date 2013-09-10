@@ -20,9 +20,7 @@ public class VitisPrimerQuery {
 	private CurationSet cs;
 	private PrimerSet primerSet;
 	
-	public VitisPrimerQuery(Sequence sequence, AdvancedPrimerBlastOptions opt,
-			AdvancedPrimerBlast rp, CurationSet cs, PrimerSet primerSet) {
-		super();
+	public VitisPrimerQuery(Sequence sequence, AdvancedPrimerBlastOptions opt, AdvancedPrimerBlast rp, CurationSet cs, PrimerSet primerSet) {
 		this.sequence = sequence;
 		this.opt = opt;
 		this.rp = rp;
@@ -33,7 +31,7 @@ public class VitisPrimerQuery {
 	public VitisPrimerQuery(String numAcc, String seq) {
 		this.initAdvancedPrimerBlastOptions();
 		this.rp = new AdvancedPrimerBlast(opt);
-		this.sequence = new Sequence(numAcc, seq);
+		this.sequence = new Sequence(numAcc, seq.length()>1000?seq.substring(seq.length()-1000, seq.length()):seq);
 	}
 	
 	private void initAdvancedPrimerBlastOptions() {
@@ -42,7 +40,7 @@ public class VitisPrimerQuery {
 		this.opt.setPrimerProductMin(300);
 		this.opt.setPrimerProductMax(400);
 		
-		this.opt.setPrimerNumReturn(7002467);
+		this.opt.setPrimerNumReturn(30);
 		
 		this.opt.setPrimerMinTm(57.0);
 		this.opt.setPrimerOptTm(60.0);
@@ -59,6 +57,14 @@ public class VitisPrimerQuery {
 		
 		this.opt.setGCMin(40);
 		this.opt.setGCMax(60);
+		
+		this.opt.setMaxGCEnd(2);
+		this.opt.setMaxHairpin(40.0);
+		this.opt.setThAlignment(true);
+		this.opt.setSelfAny(6.0);
+		this.opt.setSelfEnd(3.0);
+		this.opt.setPairAny(6.0);
+		this.opt.setPairEnd(3.0);
 		
 	}
 	

@@ -35,6 +35,42 @@ public class AdvancedPrimerBlastOptions extends PrimerBlastOptions {
 	 * Maximum GC%
 	 */
 	private Integer GCMax;
+	/**
+	 * maxGCEnd : Integer
+	 * Primer max end GC
+	 */
+	private Integer maxGCEnd;
+	/**
+	 * selfAny : Integer
+	 * self complementarity any
+	 */
+	private Double selfAny;
+	/**
+	 * selfAny : Integer
+	 * self complementarity end
+	 */
+	private Double selfEnd;
+	/**
+	 * pairAny : Integer
+	 * max pair complementarity any
+	 */
+	private Double pairAny;
+	/**
+	 * pairEnd : Integer
+	 * max pair complementarity end
+	 */
+	private Double pairEnd;
+	/**
+	 * maxHairpin : Double
+	 * maximum hairpin melting temp
+	 */
+	private Double maxHairpin;
+	/**
+	 * thAlignement : Boolean
+	 * thermodynamic alignment, which can be "on" or "off"
+	 */
+	private Boolean thAlignment;
+	// TODO : the setter will take a boolean value and put a string value (on or off)
 	
 	/**
 	 * Getter for the minimum size
@@ -115,4 +151,118 @@ public class AdvancedPrimerBlastOptions extends PrimerBlastOptions {
 	public void setGCMax(Integer gCMax) {
 		GCMax = gCMax;
 	}
+
+	/**
+	 * Getter for the max number of g and c at the end of the primer
+	 * @return maxGCEnd : Integer
+	 */
+	public Integer getMaxGCEnd() {
+		return maxGCEnd;
+	}
+
+	/**
+	 * Setter for the max number of g and c at the end of the primer
+	 * @param maxGCEnd : Integer
+	 */
+	public void setMaxGCEnd(Integer maxGCEnd) {
+		this.maxGCEnd = maxGCEnd;
+	}
+
+	/**
+	 * Getter for the self complementarity any
+	 * @return selfAny : Double
+	 */
+	public Double getSelfAny() {
+		return selfAny;
+	}
+
+	/**
+	 * Setter for the self complementarity any
+	 * @param selfAny : Double
+	 */
+	public void setSelfAny(Double selfAny) {
+		this.selfAny = selfAny;
+	}
+
+	/**
+	 * Getter for the self complementarity end
+	 * @return selfEnd : Double
+	 */
+	public Double getSelfEnd() {
+		return selfEnd;
+	}
+
+	/**
+	 * Setter for the self complementarity end
+	 * @param selfEnd : Double
+	 */
+	public void setSelfEnd(Double selfEnd) {
+		this.selfEnd = selfEnd;
+	}
+
+	/**
+	 * Getter for the pair complementarity any
+	 * @return pairAny : Double
+	 */
+	public Double getPairAny() {
+		return pairAny;
+	}
+
+	/**
+	 * Setter for the pair complementarity any
+	 * @param pairAny : Double
+	 */
+	public void setPairAny(Double pairAny) {
+		this.pairAny = pairAny;
+	}
+
+	/**
+	 * Getter for the pair complementarity end
+	 * @return pairEnd : Double
+	 */
+	public Double getPairEnd() {
+		return pairEnd;
+	}
+
+	/**
+	 * Setter for the pair complementarity end
+	 * @param pairEnd : Double
+	 */
+	public void setPairEnd(Double pairEnd) {
+		this.pairEnd = pairEnd;
+	}
+
+	/**
+	 * Getter for the maximum hairpin melting temp
+	 * @return maxHairpin : Double
+	 */
+	public Double getMaxHairpin() {
+		return maxHairpin;
+	}
+
+	/**
+	 * Setter for the maximum hairpin melting temp
+	 * @param maxHairpin : Double
+	 */
+	public void setMaxHairpin(Double maxHairpin) {
+		this.maxHairpin = maxHairpin;
+	}
+	
+	/**
+	 * Getter for the thermodynamic alignment option
+	 * @return thAlignment : Boolean
+	 */
+	public Boolean getThAlignment() {
+		return thAlignment;
+	}
+
+	/**
+	 * Setter for the thermodynamic alignment option
+	 * @param thAlignment : Boolean
+	 */
+	public void setThAlignment(Boolean thAlignment) {
+		this.thAlignment = thAlignment;
+	}
+	
+	
 }
