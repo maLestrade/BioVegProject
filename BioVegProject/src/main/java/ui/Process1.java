@@ -1,25 +1,13 @@
 package ui;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.io.File;
 
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import ui.filechooser.FileChooserField;
 import ui.filechooser.SequenceFileChooser;
-import java.awt.Font;
 
 
 public class Process1 extends JFrame {
