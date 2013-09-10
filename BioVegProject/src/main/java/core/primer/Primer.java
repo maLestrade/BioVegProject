@@ -27,7 +27,12 @@ public class Primer {
 	 * sequence of the hybridation site (in 5'>3')
 	 */
 	private String hybridSite;
-	
+
+	private Double tm;
+	private Double gc;
+	private Double selfCompAny;
+	private Double selfCompEnd;
+
 	/**
 	 * Constructor using fields
 	 * @param name : String : name of the primer, assigned by primerblast
@@ -35,12 +40,18 @@ public class Primer {
 	 * @param end : String : position of the last nucleotide of the primer in the sequence
 	 * @param hybridSite : String : sequence of the hybridation site (in 5'>3')
 	 */
-	public Primer(String name, int start, int end, String hybridSite) {
+	public Primer(String name, int start, int end, String hybridSite, Double tm, Double gc, Double selfCompAny, Double selfCompEnd) {
 		this.name = name;
 		this.start = start;
 		this.end = end;
 		this.hybridSite = hybridSite;
+		this.tm = tm;
+		this.gc = gc;
+		this.selfCompAny = selfCompAny;
+		this.selfCompEnd = selfCompEnd;
 	}
+
+
 
 	/**
 	 * Getter which return the primer name
@@ -105,5 +116,52 @@ public class Primer {
 	public void setHybridSite(String hybridSite) {
 		this.hybridSite = hybridSite;
 	}
+
+	public Double getTm() {
+		return tm;
+	}
+
+	public void setTm(Double tm) {
+		this.tm = tm;
+	}
+
+
+
+	public Double getGc() {
+		return gc;
+	}
+
+
+
+	public void setGc(Double gc) {
+		this.gc = gc;
+	}
+
+
+
+	public Double getSelfCompAny() {
+		return selfCompAny;
+	}
+
+
+
+	public void setSelfCompAny(Double selfCompAny) {
+		this.selfCompAny = selfCompAny;
+	}
+
+
+
+	public Double getSelfCompEnd() {
+		return selfCompEnd;
+	}
+
+
+
+	public void setSelfCompEnd(Double selfCompEnd) {
+		this.selfCompEnd = selfCompEnd;
+	}
+	
+	
+	
 	
 }

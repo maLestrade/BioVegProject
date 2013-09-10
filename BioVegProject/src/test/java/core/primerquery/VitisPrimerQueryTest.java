@@ -30,11 +30,19 @@ public class VitisPrimerQueryTest {
 			System.out.println("Seq : "+forward.getHybridSite());
 			System.out.println("Start : "+forward.getStart());
 			System.out.println("End : "+forward.getEnd());
+			System.out.println("Tm : "+forward.getTm());
+			System.out.println("GC% : "+forward.getGc());
+			System.out.println("Self : "+forward.getSelfCompAny());
+			System.out.println("Self 3' : "+forward.getSelfCompEnd());
 			System.out.println("-");
 			System.out.println("Reverse : "+reverse.getName());
 			System.out.println("Seq : "+reverse.getHybridSite());
 			System.out.println("Start : "+reverse.getStart());
 			System.out.println("End : "+reverse.getEnd());
+			System.out.println("Tm : "+reverse.getTm());
+			System.out.println("GC% : "+reverse.getGc());
+			System.out.println("Self : "+reverse.getSelfCompAny());
+			System.out.println("Self 3' : "+reverse.getSelfCompEnd());
 			
 		}
 		System.out.println("#############");		
