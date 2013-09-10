@@ -43,13 +43,13 @@ public class AnnotatedSequence {
 	 * @return String : concatenated sequence
 	 */
 	public String getSequence() {
-		String out = "";
+		StringBuffer out = new StringBuffer();
 		
 		for(SequencePart sp: sequenceParts) {
-			out += sp.getSequence();
+			out.append(sp);
 		}
 		
-		return out;
+		return out.toString();
 	}
 	
 	@Override
