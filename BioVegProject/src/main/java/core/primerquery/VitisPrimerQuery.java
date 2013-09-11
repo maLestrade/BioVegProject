@@ -75,8 +75,8 @@ public class VitisPrimerQuery {
 		this.opt.setPrimerSizeOpt(20);
 		this.opt.setPrimerSizeMax(22);
 		
-		this.opt.setGCMin(40);
-		this.opt.setGCMax(60);
+		this.opt.setGCMin(40d);
+		this.opt.setGCMax(60d);
 		this.opt.setMaxGCEnd(2);
 		
 		this.opt.setThAlignment(true);

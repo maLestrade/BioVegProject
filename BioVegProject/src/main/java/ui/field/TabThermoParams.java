@@ -1,5 +1,6 @@
 package ui.field;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -22,7 +23,8 @@ public class TabThermoParams extends JPanel {
 	private final JSpinner spinMaxPrimerHairpin;
 
 	public TabThermoParams() {
-		setLayout(new MigLayout("", "[]10[100][100]", ""));
+		setBorder(BorderFactory.createTitledBorder("Thermodynamic Alignement Options"));
+		setLayout(new MigLayout("ins 5 5 0 5", "[]10[100][100]", ""));
 		setOpaque(false);
 		
 		add(new JLabel("Any"), "alignx center, skip1");

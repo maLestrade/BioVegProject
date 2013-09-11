@@ -26,15 +26,15 @@ public class AdvancedPrimerBlastOptions extends PrimerBlastOptions {
 	 */
 	private Integer primerSizeOpt;
 	/**
-	 * GCMin : Integer
+	 * GCMin : Double
 	 * Minimum GC%
 	 */
-	private Integer GCMin;
+	private Double GCMin;
 	/**
-	 * GCMax : Integer
+	 * GCMax : Double
 	 * Maximum GC%
 	 */
-	private Integer GCMax;
+	private Double GCMax;
 	/**
 	 * maxGCEnd : Integer
 	 * Primer max end GC
@@ -124,7 +124,7 @@ public class AdvancedPrimerBlastOptions extends PrimerBlastOptions {
 	 * Getter for the minimum GC%
 	 * @return GCMin : Integer
 	 */
-	public Integer getGCMin() {
+	public Double getGCMin() {
 		return GCMin;
 	}
 	
@@ -132,7 +132,7 @@ public class AdvancedPrimerBlastOptions extends PrimerBlastOptions {
 	 * Setter for the minimum GC%
 	 * @param gCMin : Integer
 	 */
-	public void setGCMin(Integer gCMin) {
+	public void setGCMin(Double gCMin) {
 		GCMin = gCMin;
 	}
 	
@@ -140,7 +140,7 @@ public class AdvancedPrimerBlastOptions extends PrimerBlastOptions {
 	 * Getter for the maximum GC%
 	 * @return GCMax : Integer
 	 */
-	public Integer getGCMax() {
+	public Double getGCMax() {
 		return GCMax;
 	}
 	
@@ -148,7 +148,7 @@ public class AdvancedPrimerBlastOptions extends PrimerBlastOptions {
 	 * Setter for the maximum GC%
 	 * @param gCMax : Integer
 	 */
-	public void setGCMax(Integer gCMax) {
+	public void setGCMax(Double gCMax) {
 		GCMax = gCMax;
 	}
 
