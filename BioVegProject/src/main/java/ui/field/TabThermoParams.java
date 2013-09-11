@@ -1,10 +1,5 @@
 package ui.field;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -16,61 +11,50 @@ public class TabThermoParams extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JCheckBox chkThermoAli;
 	private final JSpinner spinAnyMaxSelfComp;
 	private final JSpinner spinEndMaxSelfComp;
 	private final JSpinner spinAnyMaxPairComp;
 	private final JSpinner spinEndMaxPairComp;
+	private final JSpinner spinTHAnyMaxSelfComp;
+	private final JSpinner spinTHEndMaxSelfComp;
+	private final JSpinner spinTHAnyMaxPairComp;
+	private final JSpinner spinTHEndMaxPairComp;
 	private final JSpinner spinMaxPrimerHairpin;
 
 	public TabThermoParams() {
 		setLayout(new MigLayout("", "[]10[100][100]", ""));
 		setOpaque(false);
 		
-		chkThermoAli = new JCheckBox("Use Thermodynamic Oligo Alignment");
-		add(chkThermoAli, "spanx 3, wrap");
-		
 		add(new JLabel("Any"), "alignx center, skip1");
 		add(new JLabel("3'"), "alignx center, wrap");
 	
 		add(new JLabel("<html>Max Self<br/> Complementarity"));
-		spinAnyMaxSelfComp = new JSpinner(new SpinnerNumberModel(0.0d, 0.0d, Double.NaN, 0.1d));
+		spinAnyMaxSelfComp = new JSpinner(new SpinnerNumberModel(0d, 0d, Double.NaN, 0.1d));
 		add(spinAnyMaxSelfComp, "growx");
-		spinEndMaxSelfComp = new JSpinner(new SpinnerNumberModel(0.0d, 0.0d, Double.NaN, 0.1d));
-		add(spinEndMaxSelfComp, "wrap, growx");
+		spinEndMaxSelfComp = new JSpinner(new SpinnerNumberModel(0d, 0d, Double.NaN, 0.1d));
+		add(spinEndMaxSelfComp, "growx, wrap");
 		
 		add(new JLabel("<html>Max Pair<br/> Complementarity"));
-		spinAnyMaxPairComp = new JSpinner(new SpinnerNumberModel(0.0d, 0.0d, Double.NaN, 0.1d));
+		spinAnyMaxPairComp = new JSpinner(new SpinnerNumberModel(0d, 0d, Double.NaN, 0.1d));
 		add(spinAnyMaxPairComp, "growx");
-		spinEndMaxPairComp = new JSpinner(new SpinnerNumberModel(0.0d, 0.0d, Double.NaN, 0.1d));
-		add(spinEndMaxPairComp, "wrap, growx");
+		spinEndMaxPairComp = new JSpinner(new SpinnerNumberModel(0d, 0d, Double.NaN, 0.1d));
+		add(spinEndMaxPairComp, "growx, wrap");
+		
+		add(new JLabel("<html>TH: Max Self<br/> Complementarity"));
+		spinTHAnyMaxSelfComp = new JSpinner(new SpinnerNumberModel(0d, 0d, 50d, 0.1d));
+		add(spinTHAnyMaxSelfComp, "growx");
+		spinTHEndMaxSelfComp = new JSpinner(new SpinnerNumberModel(0d, 0d, 50d, 0.1d));
+		add(spinTHEndMaxSelfComp, "growx, wrap");
+		
+		add(new JLabel("<html>TH: Max Pair<br/> Complementarity"));
+		spinTHAnyMaxPairComp = new JSpinner(new SpinnerNumberModel(0d, 0d, 50d, 0.1d));
+		add(spinTHAnyMaxPairComp, "growx");
+		spinTHEndMaxPairComp = new JSpinner(new SpinnerNumberModel(0d, 0d, 50d, 0.1d));
+		add(spinTHEndMaxPairComp, "growx, wrap");
 		
 		add(new JLabel("<html>TH: Max Primer<br/> Hairpin"));
-		spinMaxPrimerHairpin = new JSpinner();
+		spinMaxPrimerHairpin = new JSpinner(new SpinnerNumberModel(0d, 0d, 50d, 0.1d));
 		add(spinMaxPrimerHairpin, "growx");
-		
-		chkThermoAli.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateCheck();
-			}
-		});
-		updateCheck();
-	}
-	
-	private void updateCheck() {
-		boolean enabled = chkThermoAli.isSelected();
-		
-		for(Component c: this.getComponents()) {
-			if(c instanceof JLabel)
-				((JLabel)c).setEnabled(enabled);
-			else if(c instanceof JSpinner)
-				((JSpinner)c).setEnabled(enabled);
-		}
-	}
-
-	public JCheckBox getChkThermoAli() {
-		return chkThermoAli;
 	}
 
 	public JSpinner getSpinAnyMaxSelfComp() {
@@ -91,6 +75,22 @@ public class TabThermoParams extends JPanel {
 
 	public JSpinner getSpinMaxPrimerHairpin() {
 		return spinMaxPrimerHairpin;
+	}
+
+	public JSpinner getSpinTHAnyMaxSelfComp() {
+		return spinTHAnyMaxSelfComp;
+	}
+
+	public JSpinner getSpinTHEndMaxSelfComp() {
+		return spinTHEndMaxSelfComp;
+	}
+
+	public JSpinner getSpinTHAnyMaxPairComp() {
+		return spinTHAnyMaxPairComp;
+	}
+
+	public JSpinner getSpinTHEndMaxPairComp() {
+		return spinTHEndMaxPairComp;
 	}
 
 }
