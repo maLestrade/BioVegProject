@@ -65,19 +65,20 @@ public class PanelProcess1 extends PanelProcess {
 		pnlTabParam.getSpinOptPrimerSize().setValue(20);
 		pnlTabParam.getSpinMinPrimerSize().setValue(18);
 
-		pnlTabParam.getSpinMaxProductSize().setValue(450);
+		pnlTabParam.getSpinMaxProductSize().setValue(400);
 		pnlTabParam.getSpinMinProductSize().setValue(300);
 
-		pnlTabParam.getSpinMaxTm().setValue(57d);
+		pnlTabParam.getSpinMaxTm().setValue(63d);
 		pnlTabParam.getSpinOptTm().setValue(60d);
-		pnlTabParam.getSpinMinTm().setValue(63d);
+		pnlTabParam.getSpinMinTm().setValue(57d);
 
 		pnlTabParam.getSpinMaxGC().setValue(60d);
 		pnlTabParam.getSpinOptGC().setValue(50d);
 		pnlTabParam.getSpinMinGC().setValue(40d);
 
 		pnlTabParam.getSpinTmDiff().setValue(3d);
-		pnlTabParam.getSpinLastSubSeqSize().setValue(100);
+		pnlTabParam.getSpinLastSubSeqSize().setValue(1000);
+		pnlTabParam.getSpinMaxGCEnd().setValue(2);
 
 		pnlTabThermo.getSpinAnyMaxSelfComp().setValue(6d);
 		pnlTabThermo.getSpinEndMaxSelfComp().setValue(3d);
@@ -128,7 +129,7 @@ public class PanelProcess1 extends PanelProcess {
 
 		opt.setGCMin((Double)pnlTabParam.getSpinMinGC().getValue());
 		opt.setGCMax((Double)pnlTabParam.getSpinMaxGC().getValue());
-		opt.setMaxGCEnd(2);
+		opt.setMaxGCEnd((Integer)pnlTabParam.getSpinMaxGCEnd().getValue());
 
 		opt.setThAlignment(true);
 		opt.setThSelfAny((Double)pnlTabThermo.getSpinTHAnyMaxSelfComp().getValue());

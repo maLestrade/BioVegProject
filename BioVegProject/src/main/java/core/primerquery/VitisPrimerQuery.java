@@ -62,10 +62,10 @@ public class VitisPrimerQuery {
 		
 		this.opt.setPrimerNumReturn(30);
 		
-		this.opt.setPrimerMinTm(57.0);
-		this.opt.setPrimerOptTm(60.0);
-		this.opt.setPrimerMaxTm(63.0);
-		this.opt.setPrimerMaxDiffTm(3.0);
+		this.opt.setPrimerMinTm(57d);
+		this.opt.setPrimerOptTm(60d);
+		this.opt.setPrimerMaxTm(63d);
+		this.opt.setPrimerMaxDiffTm(3d);
 		
 		this.opt.setSearchSpecificPrimer(true);
 		this.opt.setPrimerSpecificityDatabase(RemotePrimerBlastNCBI.PrimerBlastOptions.Database.nt);
@@ -80,11 +80,11 @@ public class VitisPrimerQuery {
 		this.opt.setMaxGCEnd(2);
 		
 		this.opt.setThAlignment(true);
-		this.opt.setThSelfAny(30.0);
-		this.opt.setThSelfEnd(30.0);
-		this.opt.setThPairAny(30.0);
-		this.opt.setThPairEnd(30.0);
-		this.opt.setMaxHairpin(40.0);
+		this.opt.setThSelfAny(30d);
+		this.opt.setThSelfEnd(30d);
+		this.opt.setThPairAny(30d);
+		this.opt.setThPairEnd(30d);
+		this.opt.setMaxHairpin(30d);
 		
 	}
 	
