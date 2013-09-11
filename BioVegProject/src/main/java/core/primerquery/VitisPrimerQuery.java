@@ -21,19 +21,9 @@ public class VitisPrimerQuery {
 	private CurationSet cs;
 	private PrimerSet primerSet;
 	private Integer lastSubsequenceSize;
-	private Double complementarity;
+	private Double complementarityAny;
+	private Double complementarityEnd;
 	
-	public VitisPrimerQuery(Sequence parentSequence, AdvancedPrimerBlastOptions opt, AdvancedPrimerBlast rp, CurationSet cs, PrimerSet primerSet) {
-		this.parentSequence = parentSequence;
-		this.subSequence = parentSequence;
-		String seq = this.subSequence.getResidues();
-		this.subSequence.setResidues(seq.length()>1000?seq.substring(seq.length()-1000, seq.length()):seq);
-		this.opt = opt;
-		this.rp = rp;
-		this.cs = cs;
-		this.primerSet = primerSet;
-	}
-
 	public VitisPrimerQuery(String numAcc, String seq) {
 		this.initAdvancedPrimerBlastOptions();
 		this.rp = new AdvancedPrimerBlast(opt);
@@ -41,13 +31,28 @@ public class VitisPrimerQuery {
 		this.subSequence = new Sequence(numAcc, seq.length()>1000?seq.substring(seq.length()-1000, seq.length()):seq);
 	}
 	
-	private void initAdvancedPrimerBlastOptions() {
-		// TODO : put options in arguments
+	public VitisPrimerQuery(String numAcc, String seq, Integer lastSubsequenceSize, Double complementarityAny, Double complementarityEnd, AdvancedPrimerBlastOptions opt) {
+		this.initAdvancedPrimerBlastOptions(lastSubsequenceSize, complementarityAny, complementarityEnd, opt);
+		this.rp = new AdvancedPrimerBlast(opt);
+		this.parentSequence = new Sequence(numAcc, seq);
+		this.subSequence = new Sequence(numAcc, seq.length()>1000?seq.substring(seq.length()-1000, seq.length()):seq);
+	}
+	
+	private void initAdvancedPrimerBlastOptions(Integer lastSubsequenceSize, Double complementarityAny, Double complementarityEnd, AdvancedPrimerBlastOptions opt) {
+		// GENERAL OPTIONS
+		this.lastSubsequenceSize = lastSubsequenceSize;
+		this.complementarityAny = complementarityAny;
+		this.complementarityEnd = complementarityEnd;
 		
+		// PRIMERBLAST OPTIONS
+		this.opt = opt;
+	}
+	
+	private void initAdvancedPrimerBlastOptions() {		
 		// GENERAL OPTIONS
 		this.lastSubsequenceSize = 1000;
-		this.complementarity = 6.0;
-		
+		this.complementarityAny = 6.0;
+		this.complementarityEnd = 6.0;
 		
 		// PRIMERBLAST OPTIONS
 		this.opt = new AdvancedPrimerBlastOptions();
@@ -118,7 +123,7 @@ public class VitisPrimerQuery {
 				Integer end = level3Forward.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
 				
 				// TODO : Do not save primer if a value is not inside the chosen scale
-				if (level3Forward.getSelfCompAny() > this.complementarity || level3Forward.getSelfCompEnd() > this.complementarity) {
+				if (level3Forward.getSelfCompAny() > this.complementarityAny || level3Forward.getSelfCompEnd() > this.complementarityEnd) {
 					continue;
 				}
 				
@@ -133,7 +138,7 @@ public class VitisPrimerQuery {
 				start = level3Reverse.getStart()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
 				end = level3Reverse.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
 
-				if (level3Reverse.getSelfCompAny() > this.complementarity || level3Reverse.getSelfCompEnd() > this.complementarity) {
+				if (level3Reverse.getSelfCompAny() > this.complementarityAny || level3Reverse.getSelfCompEnd() > this.complementarityEnd) {
 					continue;
 				}
 				Primer primerReverse = new Primer(level3Reverse.getName(), start, end, hybridSite, level3Reverse.getTm(), level3Reverse.getGc(), level3Reverse.getSelfCompAny(), level3Reverse.getSelfCompEnd());
@@ -182,6 +187,23 @@ public class VitisPrimerQuery {
 	public void setLastSubsequenceSize(Integer lastSubsequenceSize) {
 		this.lastSubsequenceSize = lastSubsequenceSize;
 	}
+
+	public Double getComplementarityAny() {
+		return complementarityAny;
+	}
+
+	public void setComplementarityAny(Double complementarityAny) {
+		this.complementarityAny = complementarityAny;
+	}
+
+	public Double getComplementarityEnd() {
+		return complementarityEnd;
+	}
+
+	public void setComplementarityEnd(Double complementarityEnd) {
+		this.complementarityEnd = complementarityEnd;
+	}
+	
 	
 	
 }
