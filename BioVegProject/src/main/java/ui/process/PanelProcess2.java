@@ -38,7 +38,7 @@ public class PanelProcess2 extends PanelProcess {
 			pnlView.setOpaque(false);
 			
 			{
-				JLabel lblAccNum = new JLabel("Accession Number");
+				JLabel lblAccNum = new JLabel("Sequence file");
 				pnlView.add(lblAccNum);
 
 				fileChooserField = new FileChooserField(new File("."), new SequenceFileChooser("Choose sequence files"), "select sequence file", "no file selected");
