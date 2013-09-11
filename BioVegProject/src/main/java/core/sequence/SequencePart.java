@@ -72,4 +72,13 @@ public class SequencePart {
 	public int getEnd() {
 		return end;
 	}
+	
+	/**
+	 * Return true if the position is in the SequencePart
+	 * @param i
+	 * @return
+	 */
+	public boolean isInSequencePart(int i) {
+		return (i >= this.start && i <= this.end);
+	}
 }
