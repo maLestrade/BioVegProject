@@ -21,7 +21,7 @@ public class Process2 extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Process1 frame = new Process1();
+					Process2 frame = new Process2();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

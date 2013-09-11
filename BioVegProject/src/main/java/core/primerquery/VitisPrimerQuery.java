@@ -14,16 +14,19 @@ import core.primerblast.AdvancedPrimerBlastOptions;
 
 public class VitisPrimerQuery {
 	
-	private Sequence sequence;
+	private Sequence parentSequence;
+	private Sequence subSequence;
 	private AdvancedPrimerBlastOptions opt;
 	private AdvancedPrimerBlast rp;
 	private CurationSet cs;
 	private PrimerSet primerSet;
+	private Integer lastSubsequenceSize;
 	
-	public VitisPrimerQuery(Sequence sequence, AdvancedPrimerBlastOptions opt,
-			AdvancedPrimerBlast rp, CurationSet cs, PrimerSet primerSet) {
-		super();
-		this.sequence = sequence;
+	public VitisPrimerQuery(Sequence parentSequence, AdvancedPrimerBlastOptions opt, AdvancedPrimerBlast rp, CurationSet cs, PrimerSet primerSet) {
+		this.parentSequence = parentSequence;
+		this.subSequence = parentSequence;
+		String seq = this.subSequence.getResidues();
+		this.subSequence.setResidues(seq.length()>1000?seq.substring(seq.length()-1000, seq.length()):seq);
 		this.opt = opt;
 		this.rp = rp;
 		this.cs = cs;
@@ -33,16 +36,21 @@ public class VitisPrimerQuery {
 	public VitisPrimerQuery(String numAcc, String seq) {
 		this.initAdvancedPrimerBlastOptions();
 		this.rp = new AdvancedPrimerBlast(opt);
-		this.sequence = new Sequence(numAcc, seq);
+		this.parentSequence = new Sequence(numAcc, seq);
+		this.subSequence = new Sequence(numAcc, seq.length()>1000?seq.substring(seq.length()-1000, seq.length()):seq);
 	}
 	
 	private void initAdvancedPrimerBlastOptions() {
+		// TODO : put options in arguments
+		
+		this.lastSubsequenceSize = 1000;
+		
 		this.opt = new AdvancedPrimerBlastOptions();
 		
 		this.opt.setPrimerProductMin(300);
 		this.opt.setPrimerProductMax(400);
 		
-		this.opt.setPrimerNumReturn(7002467);
+		this.opt.setPrimerNumReturn(30);
 		
 		this.opt.setPrimerMinTm(57.0);
 		this.opt.setPrimerOptTm(60.0);
@@ -60,24 +68,27 @@ public class VitisPrimerQuery {
 		this.opt.setGCMin(40);
 		this.opt.setGCMax(60);
 		
+		this.opt.setMaxGCEnd(2);
+		this.opt.setMaxHairpin(40.0);
+		this.opt.setThAlignment(true);
+		this.opt.setSelfAny(6.0);
+		this.opt.setSelfEnd(3.0);
+		this.opt.setPairAny(6.0);
+		this.opt.setPairEnd(3.0);
+		
 	}
 	
 	public void runAnalysis() throws Exception {
 		this.cs = new CurationSet();
 		cs.setResults(new StrandedFeatureSet());
-		cs.setRefSequence(this.sequence);
+		cs.setRefSequence(this.subSequence);
 		
-		rp.runAnalysis(cs, this.sequence, 1);
+		rp.runAnalysis(cs, this.subSequence, 1);
 		
 		this.retrievePrimers();
 	}
 	
 	private void retrievePrimers(){
-
-		// TODO : javadoc
-		// TODO : test with other sequences
-		
-		String seqRevComp = (new DNASequence(this.sequence.getResidues())).getReverseComplement().getSequenceAsString();
 		
 		this.primerSet = new PrimerSet();
 		
@@ -95,29 +106,44 @@ public class VitisPrimerQuery {
 				
 				// Forward primer
 				SeqFeatureI level3Forward = level2Forward.getFeatureAt(0);
-				String strand = this.sequence.getResidues();
+				String strand = this.subSequence.getResidues();
 				String hybridSite = strand.substring(level3Forward.getStart()-2, level3Forward.getEnd()-1);
 				
-				Primer primerForward = new Primer(level3Forward.getName(), level3Forward.getStart(), level3Forward.getEnd(), hybridSite);
+				Integer start = level3Forward.getStart()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
+				Integer end = level3Forward.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
+				
+				// TODO : Do not save primer if a value is not inside the chosen scale
+				Primer primerForward = new Primer(level3Forward.getName(), start, end, hybridSite, level3Forward.getTm(), level3Forward.getGc(), level3Forward.getSelfCompAny(), level3Forward.getSelfCompEnd());
 				
 				// Reverse primer
 				SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(1);
-				strand = (new DNASequence(this.sequence.getResidues())).getComplement().getSequenceAsString();
+				strand = (new DNASequence(this.subSequence.getResidues())).getComplement().getSequenceAsString();
 				hybridSite = (new DNASequence(strand.substring(level3Reverse.getEnd()-2, level3Reverse.getStart()-1))).getReverse().getSequenceAsString();
 
-				Primer primerReverse = new Primer(level3Reverse.getName(), level3Reverse.getStart(), level3Reverse.getEnd(), hybridSite);
+				start = level3Forward.getStart()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
+				end = level3Forward.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
+				
+				Primer primerReverse = new Primer(level3Reverse.getName(), start, end, hybridSite, level3Reverse.getTm(), level3Reverse.getGc(), level3Reverse.getSelfCompAny(), level3Reverse.getSelfCompEnd());
 				
 				this.primerSet.addPrimerCouple(primerForward, primerReverse);
 			}
 		}
 	}
 
-	public Sequence getSequence() {
-		return sequence;
+	public Sequence getParentSequence() {
+		return parentSequence;
 	}
 
-	public void setSequence(Sequence sequence) {
-		this.sequence = sequence;
+	public void setParentSequence(Sequence parentSequence) {
+		this.parentSequence = parentSequence;
+	}
+
+	public Sequence getSubSequence() {
+		return subSequence;
+	}
+
+	public void setSubSequence(Sequence subSequence) {
+		this.subSequence = subSequence;
 	}
 
 	public AdvancedPrimerBlastOptions getOpt() {
@@ -135,4 +161,14 @@ public class VitisPrimerQuery {
 	public void setPrimerSet(PrimerSet primerSet) {
 		this.primerSet = primerSet;
 	}
+
+	public Integer getLastSubsequenceSize() {
+		return lastSubsequenceSize;
+	}
+
+	public void setLastSubsequenceSize(Integer lastSubsequenceSize) {
+		this.lastSubsequenceSize = lastSubsequenceSize;
+	}
+	
+	
 }

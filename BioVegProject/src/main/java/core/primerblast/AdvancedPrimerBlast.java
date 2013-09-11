@@ -54,12 +54,20 @@ public class AdvancedPrimerBlast extends RemotePrimerBlastNCBI {
 		buf.append("PRIMER_3END_SPECIFICITY_MISMATCH=" + convertOptionToString(opts.getPrimer3endSpecificityMismatch()) + "&");
 		buf.append("MISMATCH_REGION_LENGTH=" + convertOptionToString(opts.getMismatchRegionLength()) + "&");
 		buf.append("PRODUCT_SIZE_DEVIATION=" + convertOptionToString(opts.getProductSizeDeviation()) + "&");
+		
 		buf.append("PRIMER_MIN_SIZE=" + convertOptionToString(opts.getPrimerSizeMin()) + "&");
 		buf.append("PRIMER_OPT_SIZE=" + convertOptionToString(opts.getPrimerSizeOpt()) + "&");
 		buf.append("PRIMER_MAX_SIZE=" + convertOptionToString(opts.getPrimerSizeMax()) + "&");
 		buf.append("PRIMER_MIN_GC=" + convertOptionToString(opts.getGCMin()) + "&");
 		buf.append("PRIMER_MAX_GC=" + convertOptionToString(opts.getGCMax()) + "&");
 		
+		buf.append("PRIMER_MAX_END_GC=" + convertOptionToString(opts.getMaxGCEnd()) + "&");
+		buf.append("PRIMER_MAX_HAIRPIN_TH=" + convertOptionToString(opts.getMaxHairpin()) + "&");
+		buf.append("TH_OLOGO_ALIGNMENT=" + convertOptionToString(opts.getThAlignment() ? "on" : "off") + "&");
+		buf.append("SELF_ANY=" + convertOptionToString(opts.getSelfAny()) + "&");
+		buf.append("SELF_END=" + convertOptionToString(opts.getSelfEnd()) + "&");
+		buf.append("PRIMER_PAIR_MAX_COMPL_ANY=" + convertOptionToString(opts.getPairAny()) + "&");
+		buf.append("PRIMER_PAIR_MAX_COMPL_END=" + convertOptionToString(opts.getPairEnd()) + "&");
 		
 	}
 }
