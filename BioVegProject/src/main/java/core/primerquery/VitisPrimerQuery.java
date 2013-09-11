@@ -21,6 +21,7 @@ public class VitisPrimerQuery {
 	private CurationSet cs;
 	private PrimerSet primerSet;
 	private Integer lastSubsequenceSize;
+	private Double complementarity;
 	
 	public VitisPrimerQuery(Sequence parentSequence, AdvancedPrimerBlastOptions opt, AdvancedPrimerBlast rp, CurationSet cs, PrimerSet primerSet) {
 		this.parentSequence = parentSequence;
@@ -43,8 +44,12 @@ public class VitisPrimerQuery {
 	private void initAdvancedPrimerBlastOptions() {
 		// TODO : put options in arguments
 		
+		// GENERAL OPTIONS
 		this.lastSubsequenceSize = 1000;
+		this.complementarity = 6.0;
 		
+		
+		// PRIMERBLAST OPTIONS
 		this.opt = new AdvancedPrimerBlastOptions();
 		
 		this.opt.setPrimerProductMin(300);
@@ -67,14 +72,14 @@ public class VitisPrimerQuery {
 		
 		this.opt.setGCMin(40);
 		this.opt.setGCMax(60);
-		
 		this.opt.setMaxGCEnd(2);
-		this.opt.setMaxHairpin(40.0);
+		
 		this.opt.setThAlignment(true);
-		this.opt.setSelfAny(6.0);
-		this.opt.setSelfEnd(3.0);
-		this.opt.setPairAny(6.0);
-		this.opt.setPairEnd(3.0);
+		this.opt.setThSelfAny(30.0);
+		this.opt.setThSelfEnd(30.0);
+		this.opt.setThPairAny(30.0);
+		this.opt.setThPairEnd(30.0);
+		this.opt.setMaxHairpin(40.0);
 		
 	}
 	
@@ -113,16 +118,24 @@ public class VitisPrimerQuery {
 				Integer end = level3Forward.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
 				
 				// TODO : Do not save primer if a value is not inside the chosen scale
-				Primer primerForward = new Primer(level3Forward.getName(), start, end, hybridSite, level3Forward.getTm(), level3Forward.getGc(), level3Forward.getSelfCompAny(), level3Forward.getSelfCompEnd());
+				if (level3Forward.getSelfCompAny() > this.complementarity || level3Forward.getSelfCompEnd() > this.complementarity) {
+					continue;
+				}
 				
+				Primer primerForward = new Primer(level3Forward.getName(), start, end, hybridSite, level3Forward.getTm(), level3Forward.getGc(), level3Forward.getSelfCompAny(), level3Forward.getSelfCompEnd());
+
+								
 				// Reverse primer
 				SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(1);
 				strand = (new DNASequence(this.subSequence.getResidues())).getComplement().getSequenceAsString();
 				hybridSite = (new DNASequence(strand.substring(level3Reverse.getEnd()-2, level3Reverse.getStart()-1))).getReverse().getSequenceAsString();
 
-				start = level3Forward.getStart()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
-				end = level3Forward.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
-				
+				start = level3Reverse.getStart()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
+				end = level3Reverse.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
+
+				if (level3Reverse.getSelfCompAny() > this.complementarity || level3Reverse.getSelfCompEnd() > this.complementarity) {
+					continue;
+				}
 				Primer primerReverse = new Primer(level3Reverse.getName(), start, end, hybridSite, level3Reverse.getTm(), level3Reverse.getGc(), level3Reverse.getSelfCompAny(), level3Reverse.getSelfCompEnd());
 				
 				this.primerSet.addPrimerCouple(primerForward, primerReverse);

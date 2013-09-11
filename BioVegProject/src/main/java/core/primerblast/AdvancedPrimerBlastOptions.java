@@ -41,25 +41,25 @@ public class AdvancedPrimerBlastOptions extends PrimerBlastOptions {
 	 */
 	private Integer maxGCEnd;
 	/**
-	 * selfAny : Integer
-	 * self complementarity any
+	 * thSelfAny : Integer
+	 * max th for self complementarity any
 	 */
-	private Double selfAny;
+	private Double thSelfAny;
 	/**
-	 * selfAny : Integer
-	 * self complementarity end
+	 * thSelfAny : Integer
+	 * max th for self complementarity end
 	 */
-	private Double selfEnd;
+	private Double thSelfEnd;
 	/**
-	 * pairAny : Integer
-	 * max pair complementarity any
+	 * thPairAny : Integer
+	 * max th for pair complementarity any
 	 */
-	private Double pairAny;
+	private Double thPairAny;
 	/**
-	 * pairEnd : Integer
-	 * max pair complementarity end
+	 * thPairEnd : Integer
+	 * max th for pair complementarity end
 	 */
-	private Double pairEnd;
+	private Double thPairEnd;
 	/**
 	 * maxHairpin : Double
 	 * maximum hairpin melting temp
@@ -170,66 +170,66 @@ public class AdvancedPrimerBlastOptions extends PrimerBlastOptions {
 
 	/**
 	 * Getter for the self complementarity any
-	 * @return selfAny : Double
+	 * @return thSelfAny : Double
 	 */
-	public Double getSelfAny() {
-		return selfAny;
+	public Double getThSelfAny() {
+		return thSelfAny;
 	}
 
 	/**
 	 * Setter for the self complementarity any
-	 * @param selfAny : Double
+	 * @param thSelfAny : Double
 	 */
-	public void setSelfAny(Double selfAny) {
-		this.selfAny = selfAny;
+	public void setThSelfAny(Double selfAny) {
+		this.thSelfAny = selfAny;
 	}
 
 	/**
 	 * Getter for the self complementarity end
-	 * @return selfEnd : Double
+	 * @return thSelfEnd : Double
 	 */
-	public Double getSelfEnd() {
-		return selfEnd;
+	public Double getThSelfEnd() {
+		return thSelfEnd;
 	}
 
 	/**
 	 * Setter for the self complementarity end
-	 * @param selfEnd : Double
+	 * @param thSelfEnd : Double
 	 */
-	public void setSelfEnd(Double selfEnd) {
-		this.selfEnd = selfEnd;
+	public void setThSelfEnd(Double selfEnd) {
+		this.thSelfEnd = selfEnd;
 	}
 
 	/**
 	 * Getter for the pair complementarity any
-	 * @return pairAny : Double
+	 * @return thPairAny : Double
 	 */
-	public Double getPairAny() {
-		return pairAny;
+	public Double getThPairAny() {
+		return thPairAny;
 	}
 
 	/**
 	 * Setter for the pair complementarity any
-	 * @param pairAny : Double
+	 * @param thPairAny : Double
 	 */
-	public void setPairAny(Double pairAny) {
-		this.pairAny = pairAny;
+	public void setThPairAny(Double pairAny) {
+		this.thPairAny = pairAny;
 	}
 
 	/**
 	 * Getter for the pair complementarity end
-	 * @return pairEnd : Double
+	 * @return thPairEnd : Double
 	 */
-	public Double getPairEnd() {
-		return pairEnd;
+	public Double getThPairEnd() {
+		return thPairEnd;
 	}
 
 	/**
 	 * Setter for the pair complementarity end
-	 * @param pairEnd : Double
+	 * @param thPairEnd : Double
 	 */
-	public void setPairEnd(Double pairEnd) {
-		this.pairEnd = pairEnd;
+	public void setThPairEnd(Double pairEnd) {
+		this.thPairEnd = pairEnd;
 	}
 
 	/**
