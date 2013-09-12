@@ -49,6 +49,7 @@ public class VitisPrimerQuery {
 	/**
 	 * Size of the subsequence
 	 */
+	// TODO: put the size as proportion instead of number
 	private Integer lastSubsequenceSize;
 	/**
 	 * Max self complementarity any
