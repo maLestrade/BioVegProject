@@ -1,6 +1,7 @@
 package core.primerquery;
 
 import org.biojava3.core.sequence.DNASequence;
+
 import apollo.analysis.RemotePrimerBlastNCBI;
 import apollo.datamodel.CurationSet;
 import apollo.datamodel.FeatureSetI;
@@ -8,9 +9,14 @@ import apollo.datamodel.SeqFeatureI;
 import apollo.datamodel.Sequence;
 import apollo.datamodel.StrandedFeatureSet;
 import core.primer.Primer;
+import core.primer.PrimerCouple;
 import core.primer.PrimerSet;
 import core.primerblast.AdvancedPrimerBlast;
 import core.primerblast.AdvancedPrimerBlastOptions;
+
+import java.lang.Math;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class VitisPrimerQuery {
 	
@@ -146,6 +152,38 @@ public class VitisPrimerQuery {
 				this.primerSet.addPrimerCouple(primerForward, primerReverse);
 			}
 		}
+		
+		this.sortPrimers();
+	}
+	
+	private void sortPrimers() {
+		
+		for (PrimerCouple couple : this.primerSet.getPrimerCouples()) {
+			
+			Primer forward = couple.getForward();
+			Primer reverse = couple.getReverse();
+			
+			Double score = 
+					Math.abs(forward.getTm()-reverse.getTm())
+					+ Math.abs(getMean(forward.getTm(),reverse.getTm())-60.0)
+					+ Math.abs(forward.getGc()-reverse.getGc())
+					+ Math.abs(getMean(forward.getGc(),reverse.getGc())-50.0)
+					+ forward.getSelfCompAny()
+					+ forward.getSelfCompEnd()
+					+ reverse.getSelfCompAny()
+					+ reverse.getSelfCompEnd();
+			
+			couple.setScore(score);
+		}
+		Collections.sort(this.primerSet.getPrimerCouples());
+	}
+	
+	private double getMean(double... numberList) {
+	    Double total=0.0;
+	    for (double d: numberList) {
+	        total += d;
+	    }
+	    return total / (numberList.length);
 	}
 
 	public Sequence getParentSequence() {
