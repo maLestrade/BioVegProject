@@ -3,6 +3,7 @@ package ui.process;
 
 import java.io.File;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -25,9 +26,11 @@ public class PanelProcess2 extends PanelProcess {
 	private JSpinner spinLastSubSeqSize;
 
 	private TabThermoParams pnlTabThermo;	
+	private final JFrame parent;
 	
-	public PanelProcess2() {
-		super("From sequence");
+	public PanelProcess2(JFrame parent) {
+		super("From sequence", parent);
+		this.parent = parent;
 	}
 	
 	@Override
