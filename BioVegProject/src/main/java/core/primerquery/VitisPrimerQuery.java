@@ -58,7 +58,7 @@ public class VitisPrimerQuery {
 		this.opt = new AdvancedPrimerBlastOptions();
 		
 		this.opt.setPrimerProductMin(300);
-		this.opt.setPrimerProductMax(400);
+		this.opt.setPrimerProductMax(450);
 		
 		this.opt.setPrimerNumReturn(30);
 		
@@ -84,7 +84,7 @@ public class VitisPrimerQuery {
 		this.opt.setThSelfEnd(30d);
 		this.opt.setThPairAny(30d);
 		this.opt.setThPairEnd(30d);
-		this.opt.setMaxHairpin(30d);
+		this.opt.setMaxHairpin(40d);
 		
 	}
 	

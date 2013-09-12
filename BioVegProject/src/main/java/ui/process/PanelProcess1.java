@@ -65,7 +65,7 @@ public class PanelProcess1 extends PanelProcess {
 		pnlTabParam.getSpinOptPrimerSize().setValue(20);
 		pnlTabParam.getSpinMinPrimerSize().setValue(18);
 
-		pnlTabParam.getSpinMaxProductSize().setValue(400);
+		pnlTabParam.getSpinMaxProductSize().setValue(450);
 		pnlTabParam.getSpinMinProductSize().setValue(300);
 
 		pnlTabParam.getSpinMaxTm().setValue(63d);
@@ -88,7 +88,7 @@ public class PanelProcess1 extends PanelProcess {
 		pnlTabThermo.getSpinTHEndMaxSelfComp().setValue(30d);
 		pnlTabThermo.getSpinTHAnyMaxPairComp().setValue(30d);
 		pnlTabThermo.getSpinTHEndMaxPairComp().setValue(30d);
-		pnlTabThermo.getSpinMaxPrimerHairpin().setValue(30d);
+		pnlTabThermo.getSpinMaxPrimerHairpin().setValue(40d);
 	}
 
 	@Override
