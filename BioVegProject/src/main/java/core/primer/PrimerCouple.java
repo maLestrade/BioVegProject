@@ -22,7 +22,7 @@ public class PrimerCouple implements Comparable<PrimerCouple> {
 	/**
 	 * score : Double
 	 * Subjective score which is good when near 0. It is calculating as following :
-	 * 	|Tm1-Tm2| + |µ(Tm1-Tm2)-60| + |GC1-GC2| + |µ(GC1-GC2)-50| + self + self3'
+	 * |Tm1-Tm2| + |µ(Tm1-Tm2)-60| + |GC1-GC2| + |µ(GC1-GC2)-50| + self1 + self3'1 + self2 + self3'2
 	 */
 	private Double score;
 	
