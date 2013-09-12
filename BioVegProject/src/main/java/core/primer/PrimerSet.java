@@ -37,6 +37,16 @@ public class PrimerSet {
 	public void addPrimerCouple(Primer forward, Primer reverse) {
 		this.primerCouples.add(new PrimerCouple(forward, reverse));
 	}
+
+	/**
+	 * Setter for the primer couples
+	 * @param primerCouples : ArrayList<PrimerCouple>
+	 */
+	public void setPrimerCouples(ArrayList<PrimerCouple> primerCouples) {
+		this.primerCouples = primerCouples;
+	}
+	
+	
 	
 	
 }

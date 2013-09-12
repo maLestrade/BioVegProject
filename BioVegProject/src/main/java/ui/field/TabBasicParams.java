@@ -43,6 +43,7 @@ public class TabBasicParams extends JPanel {
 		lblMax.setHorizontalAlignment(SwingConstants.CENTER);
 		add(lblMax, "grow, wrap");
 	
+		// PRODUCT SIZE
 		JLabel lblProductSize = new JLabel("PCR Product size");
 		add(lblProductSize);
 		{
@@ -54,7 +55,8 @@ public class TabBasicParams extends JPanel {
 			
 			new MinOptMaxField(spinMinProductSize, spinMaxProductSize);
 		}
-		
+
+		// PRIMER SIZE
 		JLabel lblPrimerSize = new JLabel("Primer size");
 		add(lblPrimerSize);
 		{
@@ -69,7 +71,8 @@ public class TabBasicParams extends JPanel {
 			
 			new MinOptMaxField(spinMinPrimerSize, spinOptPrimerSize, spinMaxPrimerSize);
 		}
-		
+
+		// TM
 		JLabel lblTm = new JLabel("Tm");
 		add(lblTm);
 		{
@@ -84,7 +87,8 @@ public class TabBasicParams extends JPanel {
 			
 			new MinOptMaxField(spinMinTm, spinOptTm, spinMaxTm);
 		}
-		
+
+		// GC%
 		JLabel lblGC = new JLabel("GC%");
 		add(lblGC);
 		{
@@ -100,6 +104,7 @@ public class TabBasicParams extends JPanel {
 			new MinOptMaxField(spinMinGC, spinOptGC, spinMaxGC);
 		}
 		
+		// TM diff
 		{
 			JLabel lblTmDiff = new JLabel("<html>Max Tm <br/>difference");
 			add(lblTmDiff);
@@ -108,6 +113,7 @@ public class TabBasicParams extends JPanel {
 			add(spinTmDiff, "growx, wrap");
 		}
 
+		// Last subsequence size
 		{
 			JLabel lblLastSubSeqSize = new JLabel("<html>Last sub <br/>sequence size");
 			add(lblLastSubSeqSize);
@@ -118,6 +124,7 @@ public class TabBasicParams extends JPanel {
 			add(spinLastSubSeqSize, "growx, wrap");
 		}
 		
+		// Max GC end
 		{
 			add(new JLabel("<html>Max GC at end <br/>(five last nucleotides)"));
 			
