@@ -89,12 +89,31 @@ public class AnnotatedSequence {
 	public int getSequenceLenght() {
 		return sequenceParts.get(sequenceParts.size() - 1).getEnd();
 	}
+        
+        /**
+	 * Method which return the sequence type at a given location
+	 * 
+	 * @return SequencePartType
+	 */
+	public SequencePartType getLocType(int loc) {
+            for (SequencePart sq : this.sequenceParts) {
+                if (loc >= sq.getStart() && loc <= sq.getEnd()) {
+                    return sq.getType();
+                }
+            }
+            return null;
+	}
 
+        /**
+	 * La méthode que je dois faire : prend un amplicon en paramètre et retourne
+         * l'annotatedSequence correspondante.
+	 * 
+	 * @return int : sequence size
+	 */
 	public AnnotatedSequence annotateAmplicon(String amplicon) {
 
-		String parentStrSeq = this.getSequence();
 		AnnotatedSequence annotAmplicon = new AnnotatedSequence();
-
+                amplicon = amplicon.toLowerCase();
 		int idxDeb = this.getSequence().indexOf(amplicon);
 		int idxFin = idxDeb + amplicon.length();
 
@@ -111,17 +130,36 @@ public class AnnotatedSequence {
 			new IndexOutOfBoundsException(
 					"La fin de l'amplicon dépasse de la séquence annotée");
 		}
-
+                
+                boolean debFound = false;
+                int subDeb;
+                int subFin;
+                int subIdxDeb;
+                int subIdxFin;
 		for (SequencePart sq : this.sequenceParts) {
-
-			int subDeb = (idxDeb >= sq.getStart() ? idxDeb : sq.getStart());
-			int subFin = (idxFin >= sq.getEnd() ? idxFin : sq.getEnd());
-
-			System.out.println("iFIN:subDEB : " + idxFin + ":" + subDeb + "#"+ (!(idxFin < subDeb)));
-			if (!(idxFin < subDeb)) {
-				String subSeq = parentStrSeq.substring(subDeb, subFin);
-				annotAmplicon.add(sq.getType(), subSeq, idxDeb,	idxDeb + subSeq.length());
-			}
+                    if (idxDeb >= sq.getStart() && debFound == false && idxDeb < sq.getEnd()) {
+                        subDeb = idxDeb - sq.getStart() + 1;
+                        debFound = true;
+                        subIdxDeb = idxDeb;
+                    }
+                    else {
+                        subDeb = 0;
+                        subIdxDeb = sq.getStart();
+                    }
+                    
+                    if (debFound == true) {
+                        if (idxFin <= sq.getEnd()) {
+                            subFin = (idxFin - sq.getStart()) + 1;
+                            debFound = false;
+                            subIdxFin = idxFin;
+                        }
+                        else {
+                            subFin = sq.getSequence().length();
+                            subIdxFin = sq.getEnd();
+                        } 
+                        String subSeq = sq.getSequence().substring(subDeb, subFin);
+                        annotAmplicon.add(sq.getType(), subSeq, subIdxDeb, subIdxFin);                        
+                    }
 
 		}
 
