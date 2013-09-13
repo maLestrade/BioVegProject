@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -13,7 +14,7 @@ public abstract class PanelProcess extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	public PanelProcess(String title) {
+	public PanelProcess(String title, JFrame parent) {
 		setName(title);
 		setLayout(new BorderLayout());
 		setOpaque(false);

@@ -47,10 +47,10 @@ public class App extends JFrame {
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		
-		PanelProcess1 process1 = new PanelProcess1(); 
+		PanelProcess1 process1 = new PanelProcess1(this); 
 		tabbedPane.add(process1);
 		
-		PanelProcess2 process2 = new PanelProcess2(); 
+		PanelProcess2 process2 = new PanelProcess2(this); 
 		tabbedPane.add(process2);
 		
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);

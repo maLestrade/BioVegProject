@@ -44,6 +44,7 @@ public class VitisPrimerQueryTest {
 			System.out.println("Self : "+reverse.getSelfCompAny());
 			System.out.println("Self 3' : "+reverse.getSelfCompEnd());
 			
+			System.out.println("##\n"+couple.getScore());
 		}
 		System.out.println("#############");		
 	}
