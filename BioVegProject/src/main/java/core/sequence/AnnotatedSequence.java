@@ -43,6 +43,10 @@ public class AnnotatedSequence {
 		sequenceParts.add(new SequencePart(type, sequence, start, end));
 	}
 
+	public ArrayList<SequencePart> getSequenceParts() {
+		return sequenceParts;
+	}
+
 	/**
 	 * Getter which return the concatenated sequence
 	 * 
@@ -102,6 +106,34 @@ public class AnnotatedSequence {
                 }
             }
             return null;
+	}
+	
+	/**
+	 * Method which returns a list of sequence part type contained between two positions
+	 * @param start : Integer
+	 * @param end : Integer
+	 * @return parts : ArrayList<SequencePartType>
+	 */
+	public ArrayList<SequencePartType> getPartTypesFromPositions(Integer start, Integer end) {
+		ArrayList<SequencePartType> parts = new ArrayList<SequencePartType>();
+		boolean match = false;
+		
+        for (SequencePart sq : this.sequenceParts) {
+            if (start >= sq.getStart() && start <= sq.getEnd()) {
+            	match = true;
+            }
+            
+            if (match) {
+            	parts.add(sq.getType());
+            }
+            
+            if (end >= sq.getStart() && end <= sq.getEnd()) {
+            	match = false;
+            }
+        }
+        
+        return parts;
+		
 	}
 
         /**
