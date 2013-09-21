@@ -1,15 +1,30 @@
 
 package ui.process;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import apollo.analysis.RemotePrimerBlastNCBI;
+import core.genoscope.GenoscopeVitisSequenceQuery;
+import core.primer.Primer;
+import core.primer.PrimerCouple;
+import core.primerblast.AdvancedPrimerBlastOptions;
+import core.primerquery.VitisPrimerQuery;
+import core.sequence.AnnotatedSequence;
 import net.miginfocom.swing.MigLayout;
+import ui.LoadingWindow;
+import ui.Result;
 import ui.field.TabBasicParams;
 import ui.field.TabThermoParams;
 import ui.filechooser.FileChooserField;
@@ -22,8 +37,8 @@ public class PanelProcess2 extends PanelProcess {
 	private TabBasicParams pnlTabParam;
 
 	private FileChooserField fileChooserField;
-	private JSpinner spinTmDiff;
-	private JSpinner spinLastSubSeqSize;
+//	private JSpinner spinTmDiff;
+//	private JSpinner spinLastSubSeqSize;
 
 	private TabThermoParams pnlTabThermo;	
 	private final JFrame parent;
@@ -44,28 +59,28 @@ public class PanelProcess2 extends PanelProcess {
 				JLabel lblAccNum = new JLabel("Sequence file");
 				pnlView.add(lblAccNum);
 
-				fileChooserField = new FileChooserField(new File("."), new SequenceFileChooser("Choose sequence files"), "select sequence file", "no file selected");
+				fileChooserField = new FileChooserField(new File("."), new JFileChooser("Choose sequence files"), "select sequence file", "no file selected");// new SequenceFileChooser("Choose sequence files"), "select sequence file", "no file selected");
 				pnlView.add(fileChooserField, "wrap");
 			}
 
 			pnlTabParam = new TabBasicParams();
 			pnlView.add(pnlTabParam, "spanx 2, wrap, growx");
 
-			{
-				JLabel lblTmDiff = new JLabel("<html>Max Tm <br/>difference");
-				pnlView.add(lblTmDiff);
-
-				spinTmDiff = new JSpinner(new SpinnerNumberModel(0d, 0d, 100d, 0.1d));
-				pnlView.add(spinTmDiff, "wrap");
-			}
-			
-			{
-				JLabel lblLastSubSeqSize = new JLabel("<html>Last sub <br/>sequence size");
-				pnlView.add(lblLastSubSeqSize);
-				
-				spinLastSubSeqSize = new JSpinner(new SpinnerNumberModel(100, 0, Integer.MAX_VALUE, 1));
-				pnlView.add(spinLastSubSeqSize, "wrap");
-			}
+//			{
+//				JLabel lblTmDiff = new JLabel("<html>Max Tm <br/>difference");
+//				pnlView.add(lblTmDiff);
+//
+//				spinTmDiff = new JSpinner(new SpinnerNumberModel(0d, 0d, 100d, 0.1d));
+//				pnlView.add(spinTmDiff, "wrap");
+//			}
+//			
+//			{
+//				JLabel lblLastSubSeqSize = new JLabel("<html>Last sub <br/>sequence size");
+//				pnlView.add(lblLastSubSeqSize);
+//				
+//				spinLastSubSeqSize = new JSpinner(new SpinnerNumberModel(100, 0, Integer.MAX_VALUE, 1));
+//				pnlView.add(spinLastSubSeqSize, "wrap");
+//			}
 
 			pnlTabThermo = new TabThermoParams();
 			pnlView.add(pnlTabThermo, "spanx 2, wrap, growx");
@@ -82,16 +97,20 @@ public class PanelProcess2 extends PanelProcess {
 		pnlTabParam.getSpinMaxProductSize().setValue(450);
 		pnlTabParam.getSpinMinProductSize().setValue(300);
 
-		pnlTabParam.getSpinMaxTm().setValue(57d);
+		pnlTabParam.getSpinMaxTm().setValue(63d);
 		pnlTabParam.getSpinOptTm().setValue(60d);
-		pnlTabParam.getSpinMinTm().setValue(63d);
+		pnlTabParam.getSpinMinTm().setValue(57d);
 
 		pnlTabParam.getSpinMaxGC().setValue(60d);
 		pnlTabParam.getSpinOptGC().setValue(50d);
 		pnlTabParam.getSpinMinGC().setValue(40d);
 
-		spinTmDiff.setValue(3d);
-		spinLastSubSeqSize.setValue(100);
+//		spinTmDiff.setValue(3d);
+//		spinLastSubSeqSize.setValue(100);
+		
+		pnlTabParam.getSpinTmDiff().setValue(3d);
+		pnlTabParam.getSpinLastSubSeqSize().setValue(1000);
+		pnlTabParam.getSpinMaxGCEnd().setValue(2);
 		
 		pnlTabThermo.getSpinAnyMaxSelfComp().setValue(6d);
 		pnlTabThermo.getSpinEndMaxSelfComp().setValue(3d);
@@ -101,12 +120,122 @@ public class PanelProcess2 extends PanelProcess {
 		pnlTabThermo.getSpinTHEndMaxSelfComp().setValue(30d);
 		pnlTabThermo.getSpinTHAnyMaxPairComp().setValue(30d);
 		pnlTabThermo.getSpinTHEndMaxPairComp().setValue(30d);
-		pnlTabThermo.getSpinMaxPrimerHairpin().setValue(30d);
+		pnlTabThermo.getSpinMaxPrimerHairpin().setValue(40d);
 	}
 
 	@Override
 	protected void run() {
-		
+		final StringBuffer buff = new StringBuffer();
+		new LoadingWindow("Annotating sequence", parent) {
+			@Override
+			public void process() {
+				
+				System.out.println(fileChooserField.getFile().getName());
+				System.out.println(fileChooserField.getFile().length());
+				
+				String sequence = new String("");
+				try {
+					BufferedReader in = new BufferedReader(new FileReader(fileChooserField.getFile().toString()));					
+					String line = null;
+//				    String ls = System.getProperty("line.separator");
+
+				    while( (line = in.readLine()) != null ) {
+				        sequence = sequence+line;
+				    }
+				
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+					return;
+				} catch (IOException e) {
+					e.printStackTrace();
+					return;
+				}
+
+			    System.out.println(sequence);
+			    System.out.println(sequence.length());
+				
+//				setMessage("Searching for primers");
+//				
+//				AdvancedPrimerBlastOptions opt = new AdvancedPrimerBlastOptions();
+//				// PRIMERBLAST OPTIONS
+//				opt = new AdvancedPrimerBlastOptions();
+//
+//				opt.setPrimerProductMin((Integer)pnlTabParam.getSpinMinProductSize().getValue());
+//				opt.setPrimerProductMax((Integer)pnlTabParam.getSpinMaxProductSize().getValue());
+//
+//				opt.setPrimerNumReturn(30);
+//
+//				opt.setPrimerMinTm((Double)pnlTabParam.getSpinMinTm().getValue());
+//				opt.setPrimerOptTm((Double)pnlTabParam.getSpinOptTm().getValue());
+//				opt.setPrimerMaxTm((Double)pnlTabParam.getSpinMaxTm().getValue());
+//				opt.setPrimerMaxDiffTm((Double)pnlTabParam.getSpinTmDiff().getValue());
+//
+//				opt.setSearchSpecificPrimer(true);
+//				opt.setPrimerSpecificityDatabase(RemotePrimerBlastNCBI.PrimerBlastOptions.Database.nt);
+//				opt.setOrganism("29760");
+//
+//				opt.setPrimerSizeMin((Integer)pnlTabParam.getSpinMinPrimerSize().getValue());
+//				opt.setPrimerSizeOpt((Integer)pnlTabParam.getSpinOptPrimerSize().getValue());
+//				opt.setPrimerSizeMax((Integer)pnlTabParam.getSpinMaxPrimerSize().getValue());
+//
+//				opt.setGCMin((Double)pnlTabParam.getSpinMinGC().getValue());
+//				opt.setGCMax((Double)pnlTabParam.getSpinMaxGC().getValue());
+//				opt.setMaxGCEnd((Integer)pnlTabParam.getSpinMaxGCEnd().getValue());
+//
+//				opt.setThAlignment(true);
+//				opt.setThSelfAny((Double)pnlTabThermo.getSpinTHAnyMaxSelfComp().getValue());
+//				opt.setThSelfEnd((Double)pnlTabThermo.getSpinTHEndMaxSelfComp().getValue());
+//				opt.setThPairAny((Double)pnlTabThermo.getSpinTHAnyMaxPairComp().getValue());
+//				opt.setThPairEnd((Double)pnlTabThermo.getSpinTHEndMaxPairComp().getValue());
+//				opt.setMaxHairpin((Double)pnlTabThermo.getSpinMaxPrimerHairpin().getValue());
+//				
+//				VitisPrimerQuery query = new VitisPrimerQuery(
+//					fileChooserField.getFile().getName(), 
+//					sequence, 
+//					(Integer)pnlTabParam.getSpinLastSubSeqSize().getValue(), 
+//					(Double)pnlTabThermo.getSpinAnyMaxSelfComp().getValue(),
+//					(Double)pnlTabThermo.getSpinEndMaxSelfComp().getValue(),
+//					opt
+//				);
+//				
+//				try {
+//					query.runAnalysis();
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//					return;
+//				}
+//				
+//				for (PrimerCouple couple : query.getPrimerSet().getPrimerCouples()) {
+//					buff.append("#############" + "\n");
+//					
+//					Primer forward = couple.getForward();
+//					Primer reverse = couple.getReverse();
+//					
+//					buff.append("Forward : "+forward.getName() + "\n");
+//					buff.append("Seq : "+forward.getHybridSite() + "\n");
+//					buff.append("Start : "+forward.getStart() + "\n");
+//					buff.append("End : "+forward.getEnd() + "\n");
+//					buff.append("Tm : "+forward.getTm() + "\n");
+//					buff.append("GC% : "+forward.getGc() + "\n");
+//					buff.append("Self : "+forward.getSelfCompAny() + "\n");
+//					buff.append("Self 3' : "+forward.getSelfCompEnd() + "\n");
+//					buff.append("-" + "\n");
+//					buff.append("Reverse : "+reverse.getName() + "\n");
+//					buff.append("Seq : "+reverse.getHybridSite() + "\n");
+//					buff.append("Start : "+reverse.getStart() + "\n");
+//					buff.append("End : "+reverse.getEnd() + "\n");
+//					buff.append("Tm : "+reverse.getTm() + "\n");
+//					buff.append("GC% : "+reverse.getGc() + "\n");
+//					buff.append("Self : "+reverse.getSelfCompAny() + "\n");
+//					buff.append("Self 3' : "+reverse.getSelfCompEnd() + "\n");
+//					
+//				}
+//				buff.append("#############" + "\n");
+//				
+//				setVisible(false);
+//				(new Result(buff.toString(), parent)).setVisible(true);
+			}
+		};
 	}
 
 	

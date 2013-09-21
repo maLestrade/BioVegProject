@@ -85,7 +85,7 @@ public class VitisPrimerQuery {
 		this.initAdvancedPrimerBlastOptions(lastSubsequenceSize, complementarityAny, complementarityEnd, opt);
 		this.rp = new AdvancedPrimerBlast(opt);
 		this.parentSequence = new Sequence(numAcc, seq);
-		this.subSequence = new Sequence(numAcc, seq.length()>1000?seq.substring(seq.length()-1000, seq.length()):seq);
+		this.subSequence = new Sequence(numAcc, seq.length()>this.lastSubsequenceSize?seq.substring(seq.length()-this.lastSubsequenceSize, seq.length()):seq);
 	}
 	
 	/**
@@ -193,7 +193,6 @@ public class VitisPrimerQuery {
 					Integer start = level3Forward.getStart()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
 					Integer end = level3Forward.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
 					
-					// TODO : Do not save primer if a value is not inside the chosen scale
 					if (level3Forward.getSelfCompAny() > this.complementarityAny || level3Forward.getSelfCompEnd() > this.complementarityEnd) { // Does not keep primer if the self values are big
 						continue;
 					}
