@@ -153,13 +153,18 @@ public class VitisPrimerQuery {
 	 * @throws Exception
 	 */
 	public void runAnalysis() throws Exception {
+		System.out.println("\tPrepare analysis...");
 		this.cs = new CurationSet();
 		cs.setResults(new StrandedFeatureSet());
 		cs.setRefSequence(this.subSequence);
 		
+		// TODO: catch exception when sequence size shorter than primer product size
+		System.out.println("\tRun analysis...");
 		rp.runAnalysis(cs, this.subSequence, 1); // Launch the PrimerBlast request
 		
+		System.out.println("\tRetrieve primers...");
 		this.retrievePrimers(); // Retrieve the primers
+		System.out.println("\tSort primers...");
 		this.sortPrimers(); // Sort the primer couple list
 	}
 	
@@ -187,6 +192,7 @@ public class VitisPrimerQuery {
 				
 				{ // FORWARD PRIMER
 					SeqFeatureI level3Forward = level2Forward.getFeatureAt(0);
+					System.out.println(level3Forward);
 					String strand = this.subSequence.getResidues();
 					String hybridSite = strand.substring(level3Forward.getStart()-2, level3Forward.getEnd()-1);
 					
@@ -201,6 +207,7 @@ public class VitisPrimerQuery {
 				
 				{ // REVERSE PRIMER
 					SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(1);
+					System.out.println(level3Reverse);
 					String strand = (new DNASequence(this.subSequence.getResidues())).getComplement().getSequenceAsString();
 					String hybridSite = (new DNASequence(strand.substring(level3Reverse.getEnd()-2, level3Reverse.getStart()-1))).getReverse().getSequenceAsString();
 	

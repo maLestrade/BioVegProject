@@ -131,7 +131,6 @@ public class PanelProcess2 extends PanelProcess {
 			public void process() {
 				
 				System.out.println(fileChooserField.getFile().getName());
-				System.out.println(fileChooserField.getFile().length());
 				
 				String sequence = new String("");
 				try {
@@ -151,11 +150,12 @@ public class PanelProcess2 extends PanelProcess {
 					return;
 				}
 
-			    System.out.println(sequence);
-			    System.out.println(sequence.length());
+			    System.out.println("Sequence :\t"	+sequence);
+			    System.out.println("Taille :\t"		+sequence.length());
 				
 				setMessage("Searching for primers");
 				
+				System.out.println("Set options...");				
 				AdvancedPrimerBlastOptions opt = new AdvancedPrimerBlastOptions();
 				// PRIMERBLAST OPTIONS
 				opt = new AdvancedPrimerBlastOptions();
@@ -189,6 +189,7 @@ public class PanelProcess2 extends PanelProcess {
 				opt.setThPairEnd((Double)pnlTabThermo.getSpinTHEndMaxPairComp().getValue());
 				opt.setMaxHairpin((Double)pnlTabThermo.getSpinMaxPrimerHairpin().getValue());
 				
+				System.out.println("Prepare query...");
 				VitisPrimerQuery query = new VitisPrimerQuery(
 					fileChooserField.getFile().getName(), 
 					sequence, 
@@ -198,6 +199,7 @@ public class PanelProcess2 extends PanelProcess {
 					opt
 				);
 				
+				System.out.println("Run analysis...");
 				try {
 					query.runAnalysis();
 				} catch (Exception e) {
@@ -205,6 +207,7 @@ public class PanelProcess2 extends PanelProcess {
 					return;
 				}
 				
+				System.out.println("Display primers...");
 				for (PrimerCouple couple : query.getPrimerSet().getPrimerCouples()) {
 					buff.append("#############" + "\n");
 					
