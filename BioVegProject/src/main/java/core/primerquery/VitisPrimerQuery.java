@@ -49,6 +49,7 @@ public class VitisPrimerQuery {
 	/**
 	 * Size of the subsequence
 	 */
+	// TODO: put the size as proportion instead of number
 	private Integer lastSubsequenceSize;
 	/**
 	 * Max self complementarity any
@@ -84,7 +85,7 @@ public class VitisPrimerQuery {
 		this.initAdvancedPrimerBlastOptions(lastSubsequenceSize, complementarityAny, complementarityEnd, opt);
 		this.rp = new AdvancedPrimerBlast(opt);
 		this.parentSequence = new Sequence(numAcc, seq);
-		this.subSequence = new Sequence(numAcc, seq.length()>1000?seq.substring(seq.length()-1000, seq.length()):seq);
+		this.subSequence = new Sequence(numAcc, seq.length()>this.lastSubsequenceSize?seq.substring(seq.length()-this.lastSubsequenceSize, seq.length()):seq);
 	}
 	
 	/**
@@ -152,13 +153,18 @@ public class VitisPrimerQuery {
 	 * @throws Exception
 	 */
 	public void runAnalysis() throws Exception {
+		System.out.println("\tPrepare analysis...");
 		this.cs = new CurationSet();
 		cs.setResults(new StrandedFeatureSet());
 		cs.setRefSequence(this.subSequence);
 		
+		// TODO: catch exception when sequence size shorter than primer product size
+		System.out.println("\tRun analysis...");
 		rp.runAnalysis(cs, this.subSequence, 1); // Launch the PrimerBlast request
 		
+		System.out.println("\tRetrieve primers...");
 		this.retrievePrimers(); // Retrieve the primers
+		System.out.println("\tSort primers...");
 		this.sortPrimers(); // Sort the primer couple list
 	}
 	
@@ -186,13 +192,13 @@ public class VitisPrimerQuery {
 				
 				{ // FORWARD PRIMER
 					SeqFeatureI level3Forward = level2Forward.getFeatureAt(0);
+					System.out.println(level3Forward);
 					String strand = this.subSequence.getResidues();
 					String hybridSite = strand.substring(level3Forward.getStart()-2, level3Forward.getEnd()-1);
 					
 					Integer start = level3Forward.getStart()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
 					Integer end = level3Forward.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
 					
-					// TODO : Do not save primer if a value is not inside the chosen scale
 					if (level3Forward.getSelfCompAny() > this.complementarityAny || level3Forward.getSelfCompEnd() > this.complementarityEnd) { // Does not keep primer if the self values are big
 						continue;
 					}
@@ -201,6 +207,7 @@ public class VitisPrimerQuery {
 				
 				{ // REVERSE PRIMER
 					SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(1);
+					System.out.println(level3Reverse);
 					String strand = (new DNASequence(this.subSequence.getResidues())).getComplement().getSequenceAsString();
 					String hybridSite = (new DNASequence(strand.substring(level3Reverse.getEnd()-2, level3Reverse.getStart()-1))).getReverse().getSequenceAsString();
 	
