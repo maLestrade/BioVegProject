@@ -31,7 +31,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>core.Main</mainClass>
+							<mainClass>ui.App</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -76,7 +76,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>core.Main</mainClass>
+							<mainClass>ui.App</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

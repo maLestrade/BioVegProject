@@ -47,10 +47,10 @@ public class TabBasicParams extends JPanel {
 		JLabel lblProductSize = new JLabel("PCR Product size");
 		add(lblProductSize);
 		{
-			spinMinProductSize = new JSpinner();
+			spinMinProductSize = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 			add(spinMinProductSize, "growx");
 			
-			spinMaxProductSize = new JSpinner();
+			spinMaxProductSize = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 			add(spinMaxProductSize, "skip 1, grow, wrap");
 			
 			new MinOptMaxField(spinMinProductSize, spinMaxProductSize);
@@ -60,13 +60,13 @@ public class TabBasicParams extends JPanel {
 		JLabel lblPrimerSize = new JLabel("Primer size");
 		add(lblPrimerSize);
 		{
-			spinMinPrimerSize = new JSpinner();
+			spinMinPrimerSize = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 			add(spinMinPrimerSize, "growx");
 			
-			spinOptPrimerSize = new JSpinner();
+			spinOptPrimerSize = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 			add(spinOptPrimerSize, "grow");	
 			
-			spinMaxPrimerSize = new JSpinner();
+			spinMaxPrimerSize = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 			add(spinMaxPrimerSize, "grow, wrap");	
 			
 			new MinOptMaxField(spinMinPrimerSize, spinOptPrimerSize, spinMaxPrimerSize);

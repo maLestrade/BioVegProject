@@ -36,6 +36,6 @@ public class Result extends JFrame {
 	}
 
 	public void printResult(String result) {
-		txtAResult.setText("<html><pre>"+result);
+		txtAResult.setText("<html><pre width='100%'>"+result);
 	}
 }

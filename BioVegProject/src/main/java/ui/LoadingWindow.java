@@ -1,6 +1,10 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -31,7 +35,7 @@ public abstract class LoadingWindow implements Runnable {
 	 * Creates the JDialog with progress bar and text message
 	 * @param message the message that will be displayed on the loading window
 	 */
-	private void initialize(String message, JFrame parent) {
+	private void initialize(String message, final JFrame parent) {
 		loadingwindow = new JDialog();
 		loadingwindow.setUndecorated(true);
 
@@ -53,6 +57,35 @@ public abstract class LoadingWindow implements Runnable {
 		loadingwindow.pack();
 		loadingwindow.setLocationRelativeTo(parent);
 		loadingwindow.toFront();
+
+		//Keep the loading window to front when Cytoscape is focused
+		parent.addWindowFocusListener(new WindowFocusListener() {
+			@Override
+			public void windowGainedFocus(WindowEvent arg0) {
+				loadingwindow.toFront();
+				loadingwindow.setLocationRelativeTo(parent);
+			}
+
+			@Override
+			public void windowLostFocus(WindowEvent arg0) {}
+		});
+
+		//Keep the loading window centered when Cytoscape is resized or moved
+		parent.addComponentListener(new ComponentListener() {
+			@Override
+			public void componentResized(ComponentEvent arg0) {
+				loadingwindow.setLocationRelativeTo(parent);
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent arg0) {
+				loadingwindow.setLocationRelativeTo(parent);
+			}
+			@Override
+			public void componentHidden(ComponentEvent arg0) {}
+			@Override
+			public void componentShown(ComponentEvent arg0) {}
+		});
 	}
 
 

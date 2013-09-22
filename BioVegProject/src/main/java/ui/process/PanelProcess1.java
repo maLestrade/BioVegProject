@@ -161,6 +161,8 @@ public class PanelProcess1 extends PanelProcess {
 					return;
 				}
 				
+				buff.append(">"+txtAccNum.getText()+"\n");
+				buff.append(seq.getSequence()+"\n");
 				for (PrimerCouple couple : query.getPrimerSet().getPrimerCouples()) {
 					buff.append("#############" + "\n");
 					
@@ -184,6 +186,7 @@ public class PanelProcess1 extends PanelProcess {
 					buff.append("GC% : "+reverse.getGc() + "\n");
 					buff.append("Self : "+reverse.getSelfCompAny() + "\n");
 					buff.append("Self 3' : "+reverse.getSelfCompEnd() + "\n");
+					buff.append("=> score : "+couple.getScore()+"\n");
 					
 				}
 				buff.append("#############" + "\n");
