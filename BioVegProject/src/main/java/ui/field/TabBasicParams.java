@@ -1,5 +1,8 @@
 package ui.field;
 
+import java.awt.Component;
+import java.awt.Dimension;
+
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,15 +36,19 @@ public class TabBasicParams extends JPanel {
 		setLayout(new MigLayout("ins 5 5 0 5", "[][grow][grow][grow]", "[][][][][][][][]"));
 		setOpaque(false);
 		
-		JLabel lblMin = new JLabel("Minimum");
-		lblMin.setHorizontalAlignment(SwingConstants.CENTER);
-		add(lblMin, "skip 1, grow");
-		JLabel lblOpt = new JLabel("Optimal");
-		lblOpt.setHorizontalAlignment(SwingConstants.CENTER);
-		add(lblOpt, "grow");
-		JLabel lblMax = new JLabel("Maximum");
-		lblMax.setHorizontalAlignment(SwingConstants.CENTER);
-		add(lblMax, "grow, wrap");
+		{ // HEADERS
+			JLabel lblMin = new JLabel("Minimum");
+			lblMin.setHorizontalAlignment(SwingConstants.CENTER);
+			add(lblMin, "skip 1, grow");
+			
+			JLabel lblOpt = new JLabel("Optimal");
+			lblOpt.setHorizontalAlignment(SwingConstants.CENTER);
+			add(lblOpt, "grow");
+			
+			JLabel lblMax = new JLabel("Maximum");
+			lblMax.setHorizontalAlignment(SwingConstants.CENTER);
+			add(lblMax, "grow, wrap");
+		}
 	
 		// PRODUCT SIZE
 		JLabel lblProductSize = new JLabel("PCR Product size");
@@ -130,6 +137,17 @@ public class TabBasicParams extends JPanel {
 			
 			spinMaxGCEnd = new JSpinner(new SpinnerNumberModel(2, 0, 5, 1));
 			add(spinMaxGCEnd, "aligny top, growx");
+		}
+		
+		// Hack to have less big JSpinner
+		Dimension size = spinMinProductSize.getMinimumSize();
+		size.width = 15;
+		for(Component c: getComponents()) {
+			if(c instanceof JSpinner) {
+				((JSpinner)c).setSize(size);
+				((JSpinner)c).setPreferredSize(size);
+				((JSpinner)c).setMinimumSize(size);
+			}
 		}
 	}
 

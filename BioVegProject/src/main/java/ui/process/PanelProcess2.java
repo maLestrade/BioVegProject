@@ -21,8 +21,6 @@ import ui.filechooser.FileChooserField;
 import ui.filechooser.SequenceFileChooser;
 import apollo.analysis.PrimerBlastHtmlParser.PrimerBlastHtmlParserException;
 import apollo.analysis.RemotePrimerBlastNCBI;
-import core.primer.Primer;
-import core.primer.PrimerCouple;
 import core.primerblast.AdvancedPrimerBlastOptions;
 import core.primerquery.VitisPrimerQuery;
 
@@ -121,7 +119,7 @@ public class PanelProcess2 extends PanelProcess {
 
 	@Override
 	protected void run() {
-		final StringBuffer buff = new StringBuffer();
+		
 		new LoadingWindow("Annotating sequence", parent) {
 			@Override
 			public void process() {
@@ -137,7 +135,7 @@ public class PanelProcess2 extends PanelProcess {
 				    while( (line = in.readLine()) != null ) {
 				        sequence = sequence+line;
 				    }
-				
+				    in.close();
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 					return;
@@ -217,36 +215,10 @@ public class PanelProcess2 extends PanelProcess {
 					return;
 				}
 				
-				System.out.println("Display primers...");
-				for (PrimerCouple couple : query.getPrimerSet().getPrimerCouples()) {
-					buff.append("#############" + "\n");
-					
-					Primer forward = couple.getForward();
-					Primer reverse = couple.getReverse();
-					
-					buff.append("Forward : "	+ forward.getName() 		+ "\n");
-					buff.append("Seq : "		+ forward.getHybridSite() 	+ "\n");
-					buff.append("Start : "		+ forward.getStart() 		+ "\n");
-					buff.append("End : "		+ forward.getEnd() 			+ "\n");
-					buff.append("Tm : "			+ forward.getTm() 			+ "\n");
-					buff.append("GC% : "		+ forward.getGc() 			+ "\n");
-					buff.append("Self : "		+ forward.getSelfCompAny() 	+ "\n");
-					buff.append("Self 3' : "	+ forward.getSelfCompEnd() 	+ "\n");
-					buff.append("-" + "\n");
-					buff.append("Reverse : "	+ reverse.getName() 		+ "\n");
-					buff.append("Seq : "		+ reverse.getHybridSite() 	+ "\n");
-					buff.append("Start : "		+ reverse.getStart() 		+ "\n");
-					buff.append("End : "		+ reverse.getEnd() 			+ "\n");
-					buff.append("Tm : "			+ reverse.getTm() 			+ "\n");
-					buff.append("GC% : "		+ reverse.getGc() 			+ "\n");
-					buff.append("Self : "		+ reverse.getSelfCompAny() 	+ "\n");
-					buff.append("Self 3' : "	+ reverse.getSelfCompEnd() 	+ "\n");
-					
-				}
-				buff.append("#############" + "\n");
-				
 				setVisible(false);
-				(new Result(buff.toString(), parent)).setVisible(true);
+				Result res = new Result(parent);
+				res.printResult("Input sequence:\n", sequence, null, query);
+				res.setVisible(true);
 			}
 		};
 	}

@@ -13,12 +13,9 @@ import ui.field.TabBasicParams;
 import ui.field.TabThermoParams;
 import apollo.analysis.RemotePrimerBlastNCBI;
 import core.genoscope.GenoscopeVitisSequenceQuery;
-import core.primer.Primer;
-import core.primer.PrimerCouple;
 import core.primerblast.AdvancedPrimerBlastOptions;
 import core.primerquery.VitisPrimerQuery;
 import core.sequence.AnnotatedSequence;
-import core.sequence.SequencePartType;
 
 public class PanelProcess1 extends PanelProcess {
 
@@ -96,7 +93,7 @@ public class PanelProcess1 extends PanelProcess {
 
 	@Override
 	protected void run() {
-		final StringBuffer buff = new StringBuffer();
+		
 		new LoadingWindow("Retrieving Genoscope Sequence", parent) {
 			@Override
 			public void process() {
@@ -162,48 +159,11 @@ public class PanelProcess1 extends PanelProcess {
 					return;
 				}
 				
-				buff.append(">"+txtAccNum.getText()+"\n");
-				buff.append(seq.getSequence()+"\n");
-				for (PrimerCouple couple : query.getPrimerSet().getPrimerCouples()) {
-					buff.append("#############" + "\n");
-					
-					Primer forward = couple.getForward();
-					Primer reverse = couple.getReverse();
-					
-					buff.append("Forward : "	+ forward.getName() 		+ "\n");
-					buff.append("Seq : "		+ forward.getHybridSite() 	+ "\n");
-					buff.append("Start : "		+ forward.getStart() 		+ "\n");
-					buff.append("End : "		+ forward.getEnd() 			+ "\n");
-					buff.append("Tm : "			+ forward.getTm() 			+ "\n");
-					buff.append("GC% : "		+ forward.getGc() 			+ "\n");
-					buff.append("Self : "		+ forward.getSelfCompAny() 	+ "\n");
-					buff.append("Self 3' : "	+ forward.getSelfCompEnd() 	+ "\n");
-					
-					buff.append("-" + "\n");
-					
-					buff.append("Reverse : "	+ reverse.getName() 		+ "\n");
-					buff.append("Seq : "		+ reverse.getHybridSite() 	+ "\n");
-					buff.append("Start : "		+ reverse.getStart() 		+ "\n");
-					buff.append("End : "		+ reverse.getEnd() 			+ "\n");
-					buff.append("Tm : "			+ reverse.getTm() 			+ "\n");
-					buff.append("GC% : "		+ reverse.getGc() 			+ "\n");
-					buff.append("Self : "		+ reverse.getSelfCompAny() 	+ "\n");
-					buff.append("Self 3' : "	+ reverse.getSelfCompEnd() 	+ "\n");
-					
-					buff.append("=> score : "   + couple.getScore()			+ "\n");
-					
-					buff.append("\n" + "The generated amplicon will be on :" + "\n");
-					
-					for(SequencePartType t : seq.getPartTypesFromPositions(forward.getStart(), reverse.getStart())) {
-						buff.append(t+" ");
-					}
-					buff.append("\n\n");
-					
-				}
-				buff.append("#############" + "\n");
-				
+				// Display results
 				setVisible(false);
-				(new Result(buff.toString(), parent)).setVisible(true);
+				Result res = new Result(parent);
+				res.printResult(txtAccNum.getText(), seq.getSequence(), seq, query);
+				res.setVisible(true);
 			}
 		};
 	}
