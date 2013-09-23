@@ -11,11 +11,6 @@ import java.util.ArrayList;
 public class AnnotatedSequence {
 
 	/**
-	 * serialVersionUID : long Variable for serialization
-	 */
-	private static final long serialVersionUID = 1L;
-
-	/**
 	 * sequenceParts : ArrayList<SequencePart> List of sequence parts
 	 */
 	private final ArrayList<SequencePart> sequenceParts;

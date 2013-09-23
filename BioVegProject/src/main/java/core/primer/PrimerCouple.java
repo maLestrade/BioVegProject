@@ -1,7 +1,5 @@
 package core.primer;
 
-import java.util.Comparator;
-
 /**
  * Class for a couple of Primer
  * @author pidupuis, gcornut

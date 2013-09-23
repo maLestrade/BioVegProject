@@ -1,9 +1,11 @@
 package ui;
 
+import java.awt.Font;
+
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 
 import core.primer.Primer;
 import core.primer.PrimerCouple;
@@ -14,37 +16,33 @@ import core.sequence.SequencePartType;
 public class Result extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private final JTextPane txtAResult;
+	private final JTextArea txtAResult;
 	
 	public Result(JFrame parent) {
 		setTitle("Results");
 		setBounds(100, 100, 500, 500);
 		
-		txtAResult = new JTextPane();
-		txtAResult.setContentType("text/html");
+		txtAResult = new JTextArea();
+		txtAResult.setLineWrap(true);
+		txtAResult.setFont(new Font("Monospaced",Font.PLAIN,15));
 		txtAResult.setEditable(false);
 		
-		JScrollPane scroll = new JScrollPane(txtAResult);
-		scroll.setViewportBorder(BorderFactory.createEmptyBorder());
-		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scroll.getViewport().setOpaque(false);
-		scroll.setOpaque(false);
+		JScrollPane scroll = new JScrollPane(new OnlyVerticalScrollPanel(txtAResult));
 		scroll.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		getContentPane().add(scroll);
+		add(scroll);
 		
 		setLocationRelativeTo(parent);
 	}
 
 	public void printResult(String result) {
-		txtAResult.setText("<html><pre>"+result);
+		txtAResult.setText(result);
 	}
 	
-	public void printResult(String txtAccNum, String sequence, AnnotatedSequence annotatedSequence, VitisPrimerQuery query) {
+	public void printResult(AnnotatedSequence annotatedSequence, VitisPrimerQuery query) {
 		final StringBuffer buff = new StringBuffer();
 		
-		buff.append(">" + txtAccNum + "\n");
-		buff.append(sequence.replaceAll("(.{60})", "$1\n") + "\n");
+		buff.append(">" + annotatedSequence.getName() + "\n");
+		buff.append(annotatedSequence.getSequence()+"\n");
 		
 		for (PrimerCouple couple : query.getPrimerSet().getPrimerCouples()) {
 			buff.append("#############" + "\n");

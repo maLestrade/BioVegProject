@@ -1,6 +1,5 @@
 package ui.field;
 
-import javax.swing.JComponent;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

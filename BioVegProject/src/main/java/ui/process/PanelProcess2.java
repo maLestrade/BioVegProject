@@ -23,6 +23,8 @@ import apollo.analysis.PrimerBlastHtmlParser.PrimerBlastHtmlParserException;
 import apollo.analysis.RemotePrimerBlastNCBI;
 import core.primerblast.AdvancedPrimerBlastOptions;
 import core.primerquery.VitisPrimerQuery;
+import core.sequence.AnnotatedSequence;
+import core.sequence.SequencePartType;
 
 public class PanelProcess2 extends PanelProcess {
 	
@@ -125,17 +127,17 @@ public class PanelProcess2 extends PanelProcess {
 			public void process() {
 				
 				System.out.println(fileChooserField.getFile().getName());
-				
+				AnnotatedSequence seq = new AnnotatedSequence("Input sequence:");
 				String sequence = new String("");
 				try {
 					BufferedReader in = new BufferedReader(new FileReader(fileChooserField.getFile().toString()));					
 					String line = null;
-//				    String ls = System.getProperty("line.separator");
-
-				    while( (line = in.readLine()) != null ) {
-				        sequence = sequence+line;
-				    }
-				    in.close();
+					//String ls = System.getProperty("line.separator");
+					while( (line = in.readLine()) != null ) {
+						sequence = sequence+line;
+					}
+					in.close();
+					seq.add(SequencePartType.UNKNOWN, sequence, 0, sequence.length()-1);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 					return;
@@ -210,14 +212,15 @@ public class PanelProcess2 extends PanelProcess {
 							"Error: sequence lenght",
 							JOptionPane.ERROR_MESSAGE);
 					}
-					e.printStackTrace();
+					else
+						e.printStackTrace();
 					
 					return;
 				}
 				
 				setVisible(false);
 				Result res = new Result(parent);
-				res.printResult("Input sequence:\n", sequence, null, query);
+				res.printResult(seq, query);
 				res.setVisible(true);
 			}
 		};

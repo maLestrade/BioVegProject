@@ -38,7 +38,7 @@ public class GenoscopeVitisSequenceQuery {
 
 		Document doc = Jsoup.connect(url+protAccNum).get(); // Retrieve the html page
 
-		AnnotatedSequence seq = new AnnotatedSequence(); // Instantiate an annotated sequence, which is a list of sequence part
+		AnnotatedSequence seq = new AnnotatedSequence(protAccNum); // Instantiate an annotated sequence, which is a list of sequence part
 
 		Elements pre = doc.select("span.sequence pre"); // Retrieve the tags <span class="sequence"><pre></pre></span> which contains the sequence
 		List<Node> seqParts = pre.get(0).childNodes(); // Retrieve the first one, corresponding to the gene sequence

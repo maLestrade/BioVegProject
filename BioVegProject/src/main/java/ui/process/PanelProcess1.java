@@ -162,7 +162,7 @@ public class PanelProcess1 extends PanelProcess {
 				// Display results
 				setVisible(false);
 				Result res = new Result(parent);
-				res.printResult(txtAccNum.getText(), seq.getSequence(), seq, query);
+				res.printResult(seq, query);
 				res.setVisible(true);
 			}
 		};
