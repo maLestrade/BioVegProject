@@ -7,21 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 
-import apollo.analysis.RemotePrimerBlastNCBI;
-import core.genoscope.GenoscopeVitisSequenceQuery;
-import core.primer.Primer;
-import core.primer.PrimerCouple;
-import core.primerblast.AdvancedPrimerBlastOptions;
-import core.primerquery.VitisPrimerQuery;
-import core.sequence.AnnotatedSequence;
 import net.miginfocom.swing.MigLayout;
 import ui.LoadingWindow;
 import ui.Result;
@@ -29,6 +19,12 @@ import ui.field.TabBasicParams;
 import ui.field.TabThermoParams;
 import ui.filechooser.FileChooserField;
 import ui.filechooser.SequenceFileChooser;
+import apollo.analysis.PrimerBlastHtmlParser.PrimerBlastHtmlParserException;
+import apollo.analysis.RemotePrimerBlastNCBI;
+import core.primer.Primer;
+import core.primer.PrimerCouple;
+import core.primerblast.AdvancedPrimerBlastOptions;
+import core.primerquery.VitisPrimerQuery;
 
 public class PanelProcess2 extends PanelProcess {
 	
@@ -59,7 +55,7 @@ public class PanelProcess2 extends PanelProcess {
 				JLabel lblAccNum = new JLabel("Sequence file");
 				pnlView.add(lblAccNum);
 
-				fileChooserField = new FileChooserField(new File("."), new JFileChooser("Choose sequence files"), "select sequence file", "no file selected");// new SequenceFileChooser("Choose sequence files"), "select sequence file", "no file selected");
+				fileChooserField = new FileChooserField(new File("."), new SequenceFileChooser("Choose sequence files"), "select sequence file", "no file selected");// new SequenceFileChooser("Choose sequence files"), "select sequence file", "no file selected");
 				pnlView.add(fileChooserField, "wrap");
 			}
 
@@ -203,7 +199,21 @@ public class PanelProcess2 extends PanelProcess {
 				try {
 					query.runAnalysis();
 				} catch (Exception e) {
+					if(e instanceof PrimerBlastHtmlParserException && e.getMessage().contains("is shorter than specified")) {
+						JOptionPane.showMessageDialog(
+							null,
+							"Error: the sequence length ("
+								+ sequence.length() 
+								+ ") is shorter than the product size specified ("
+								+ (Integer)pnlTabParam.getSpinMinProductSize().getValue()
+								+ "-"
+								+ (Integer)pnlTabParam.getSpinMaxProductSize().getValue() 
+								+ ")",
+							"Error: sequence lenght",
+							JOptionPane.ERROR_MESSAGE);
+					}
 					e.printStackTrace();
+					
 					return;
 				}
 				

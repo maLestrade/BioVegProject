@@ -18,7 +18,6 @@ import core.primer.PrimerCouple;
 import core.primerblast.AdvancedPrimerBlastOptions;
 import core.primerquery.VitisPrimerQuery;
 import core.sequence.AnnotatedSequence;
-import core.sequence.SequencePart;
 import core.sequence.SequencePartType;
 
 public class PanelProcess1 extends PanelProcess {
@@ -182,15 +181,16 @@ public class PanelProcess1 extends PanelProcess {
 					
 					buff.append("-" + "\n");
 					
-					buff.append("Reverse : "	+ reverse.getName() + "\n");
-					buff.append("Seq : "		+ reverse.getHybridSite() + "\n");
-					buff.append("Start : "		+ reverse.getStart() + "\n");
-					buff.append("End : "		+ reverse.getEnd() + "\n");
-					buff.append("Tm : "			+ reverse.getTm() + "\n");
-					buff.append("GC% : "		+ reverse.getGc() + "\n");
-					buff.append("Self : "		+ reverse.getSelfCompAny() + "\n");
-					buff.append("Self 3' : "	+ reverse.getSelfCompEnd() + "\n");
-					buff.append("=> score : "+	couple.getScore()+"\n");
+					buff.append("Reverse : "	+ reverse.getName() 		+ "\n");
+					buff.append("Seq : "		+ reverse.getHybridSite() 	+ "\n");
+					buff.append("Start : "		+ reverse.getStart() 		+ "\n");
+					buff.append("End : "		+ reverse.getEnd() 			+ "\n");
+					buff.append("Tm : "			+ reverse.getTm() 			+ "\n");
+					buff.append("GC% : "		+ reverse.getGc() 			+ "\n");
+					buff.append("Self : "		+ reverse.getSelfCompAny() 	+ "\n");
+					buff.append("Self 3' : "	+ reverse.getSelfCompEnd() 	+ "\n");
+					
+					buff.append("=> score : "   + couple.getScore()			+ "\n");
 					
 					buff.append("\n" + "The generated amplicon will be on :" + "\n");
 					

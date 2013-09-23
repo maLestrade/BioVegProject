@@ -1,6 +1,7 @@
 package core.primerquery;
 
 import org.biojava3.core.sequence.DNASequence;
+
 import apollo.analysis.RemotePrimerBlastNCBI;
 import apollo.datamodel.CurationSet;
 import apollo.datamodel.FeatureSetI;
@@ -12,6 +13,8 @@ import core.primer.PrimerCouple;
 import core.primer.PrimerSet;
 import core.primerblast.AdvancedPrimerBlast;
 import core.primerblast.AdvancedPrimerBlastOptions;
+import core.sequence.SequenceUtils;
+
 import java.lang.Math;
 import java.util.Collections;
 
@@ -59,6 +62,7 @@ public class VitisPrimerQuery {
 	 * Max self complementarity end
 	 */
 	private Double complementarityEnd;
+	private int startPosition;
 	
 	/**
 	 * Constructor which use default PrimerBlast options
@@ -85,7 +89,8 @@ public class VitisPrimerQuery {
 		this.initAdvancedPrimerBlastOptions(lastSubsequenceSize, complementarityAny, complementarityEnd, opt);
 		this.rp = new AdvancedPrimerBlast(opt);
 		this.parentSequence = new Sequence(numAcc, seq);
-		this.subSequence = new Sequence(numAcc, seq.length()>this.lastSubsequenceSize?seq.substring(seq.length()-this.lastSubsequenceSize, seq.length()):seq);
+		this.startPosition = seq.length()>this.lastSubsequenceSize?seq.length()-this.lastSubsequenceSize:0;
+		this.subSequence = new Sequence(numAcc, seq.substring(startPosition, seq.length()));
 	}
 	
 	/**
@@ -158,7 +163,6 @@ public class VitisPrimerQuery {
 		cs.setResults(new StrandedFeatureSet());
 		cs.setRefSequence(this.subSequence);
 		
-		// TODO: catch exception when sequence size shorter than primer product size
 		System.out.println("\tRun analysis...");
 		rp.runAnalysis(cs, this.subSequence, 1); // Launch the PrimerBlast request
 		
@@ -196,8 +200,8 @@ public class VitisPrimerQuery {
 					String strand = this.subSequence.getResidues();
 					String hybridSite = strand.substring(level3Forward.getStart()-2, level3Forward.getEnd()-1);
 					
-					Integer start = level3Forward.getStart()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
-					Integer end = level3Forward.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
+					Integer start = level3Forward.getStart()+startPosition;
+					Integer end = level3Forward.getEnd()+startPosition;
 					
 					if (level3Forward.getSelfCompAny() > this.complementarityAny || level3Forward.getSelfCompEnd() > this.complementarityEnd) { // Does not keep primer if the self values are big
 						continue;
@@ -208,11 +212,11 @@ public class VitisPrimerQuery {
 				{ // REVERSE PRIMER
 					SeqFeatureI level3Reverse = level2Reverse.getFeatureAt(1);
 					System.out.println(level3Reverse);
-					String strand = (new DNASequence(this.subSequence.getResidues())).getComplement().getSequenceAsString();
+					String strand = SequenceUtils.complement(this.subSequence.getResidues());
 					String hybridSite = (new DNASequence(strand.substring(level3Reverse.getEnd()-2, level3Reverse.getStart()-1))).getReverse().getSequenceAsString();
 	
-					Integer start = level3Reverse.getStart()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
-					Integer end = level3Reverse.getEnd()+this.parentSequence.getResidues().length()-this.lastSubsequenceSize;
+					Integer start = level3Reverse.getStart()+startPosition;
+					Integer end = level3Reverse.getEnd()+startPosition;
 	
 					if (level3Reverse.getSelfCompAny() > this.complementarityAny || level3Reverse.getSelfCompEnd() > this.complementarityEnd) { // Does not keep primer if the self values are big
 						continue;

@@ -20,8 +20,8 @@ public class SequenceFileChooser extends JFileChooser {
 		setAcceptAllFileFilterUsed(false);
 
 		setFileFilter(new FileNameExtensionFilter(
-			"Sequence files (*.fasta, *.gb, ...)",
-			"fasta", "gb"
+			"Sequence files (*.seq)",
+			"seq"
 		));
 	}
 	
