@@ -18,11 +18,11 @@ public class TestResult extends JFrame {
 			@Override
 			protected String doInBackground() throws Exception {
 				setProgress(0);
-				publish("searching sequence.....................................................................................................");
+				publish("searching sequence...");
 				Thread.sleep(2000);
 				publish("done!");
 				setProgress(1);
-				publish("searching primers");
+				publish("searching primers...");
 				Thread.sleep(5000);
 				publish("done!");
 				return "";

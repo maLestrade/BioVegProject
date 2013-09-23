@@ -36,7 +36,6 @@ public class ResultWindow extends JFrame {
 			progressBar.setIndeterminate(true);
 			progressBar.setVisible(false);
 			add(progressBar, "grow, wrap");
-
 		}
 
 		{ // Text result
@@ -100,7 +99,7 @@ public class ResultWindow extends JFrame {
 						break;
 					default: break;
 				}
-				revalidate();
+				repaint();
 			}
 		});
 	}
