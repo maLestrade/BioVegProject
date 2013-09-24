@@ -46,18 +46,6 @@ public class ResultWindow extends JFrame {
 			txtAResult.setLineWrap(true);
 			txtAResult.setFont(new Font("Monospaced",Font.PLAIN,12));
 			txtAResult.setEditable(false);
-			
-			/*
-			ScrollablePanel scrollView = new ScrollablePanel();
-			scrollView.setScrollableWidth(ScrollableSizeHint.FIT);
-			scrollView.setScrollableHeight(ScrollableSizeHint.STRETCH);
-			scrollView.setScrollableBlockIncrement(ScrollablePanel.VERTICAL, ScrollablePanel.IncrementType.PERCENT, 200);
-			scrollView.setAlignmentY(Component.TOP_ALIGNMENT);
-			scrollView.setLayout(new BorderLayout());
-			scrollView.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
-			scrollView.setBackground(Color.white);
-			scrollView.add(txtAResult, BorderLayout.CENTER);
-			*/
 
 			JScrollPane scroll = new JScrollPane(new OnlyVerticalScrollPanel(txtAResult));
 			scroll.setBackground(Color.WHITE);
