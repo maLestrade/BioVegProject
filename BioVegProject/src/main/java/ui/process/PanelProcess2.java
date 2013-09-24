@@ -13,12 +13,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
-import ui.LoadingWindow;
-import ui.Result;
 import ui.field.TabBasicParams;
 import ui.field.TabThermoParams;
 import ui.filechooser.FileChooserField;
 import ui.filechooser.SequenceFileChooser;
+import ui.worker.ResultWindow;
+import ui.worker.ResultWorker;
 import apollo.analysis.PrimerBlastHtmlParser.PrimerBlastHtmlParserException;
 import apollo.analysis.RemotePrimerBlastNCBI;
 import core.primerblast.AdvancedPrimerBlastOptions;
@@ -61,22 +61,6 @@ public class PanelProcess2 extends PanelProcess {
 
 			pnlTabParam = new TabBasicParams();
 			pnlView.add(pnlTabParam, "spanx 2, wrap, growx");
-
-//			{
-//				JLabel lblTmDiff = new JLabel("<html>Max Tm <br/>difference");
-//				pnlView.add(lblTmDiff);
-//
-//				spinTmDiff = new JSpinner(new SpinnerNumberModel(0d, 0d, 100d, 0.1d));
-//				pnlView.add(spinTmDiff, "wrap");
-//			}
-//			
-//			{
-//				JLabel lblLastSubSeqSize = new JLabel("<html>Last sub <br/>sequence size");
-//				pnlView.add(lblLastSubSeqSize);
-//				
-//				spinLastSubSeqSize = new JSpinner(new SpinnerNumberModel(100, 0, Integer.MAX_VALUE, 1));
-//				pnlView.add(spinLastSubSeqSize, "wrap");
-//			}
 
 			pnlTabThermo = new TabThermoParams();
 			pnlView.add(pnlTabThermo, "spanx 2, wrap, growx");
@@ -121,110 +105,124 @@ public class PanelProcess2 extends PanelProcess {
 
 	@Override
 	protected void run() {
-		
-		new LoadingWindow("Annotating sequence", parent) {
+		final String[] steps = {"Loading sequence", "Searching for primers"};
+
+		ResultWindow window = new ResultWindow(parent);
+		window.setVisible(true);
+		ResultWorker worker = new ResultWorker(window) {
 			@Override
-			public void process() {
+			protected String doInBackground() throws Exception {
+				AnnotatedSequence seq = null;
 				
-				System.out.println(fileChooserField.getFile().getName());
-				AnnotatedSequence seq = new AnnotatedSequence("Input sequence:");
-				String sequence = new String("");
-				try {
-					BufferedReader in = new BufferedReader(new FileReader(fileChooserField.getFile().toString()));					
-					String line = null;
-					//String ls = System.getProperty("line.separator");
-					while( (line = in.readLine()) != null ) {
-						sequence = sequence+line;
-					}
-					in.close();
-					seq.add(SequencePartType.UNKNOWN, sequence, 0, sequence.length()-1);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-					return;
-				} catch (IOException e) {
-					e.printStackTrace();
-					return;
-				}
-
-			    System.out.println("Sequence :\t"	+sequence);
-			    System.out.println("Taille :\t"		+sequence.length());
-				
-				setMessage("Searching for primers");
-				
-				System.out.println("Set options...");				
-				AdvancedPrimerBlastOptions opt = new AdvancedPrimerBlastOptions();
-				// PRIMERBLAST OPTIONS
-				opt = new AdvancedPrimerBlastOptions();
-
-				opt.setPrimerProductMin((Integer)pnlTabParam.getSpinMinProductSize().getValue());
-				opt.setPrimerProductMax((Integer)pnlTabParam.getSpinMaxProductSize().getValue());
-
-				opt.setPrimerNumReturn(30);
-
-				opt.setPrimerMinTm((Double)pnlTabParam.getSpinMinTm().getValue());
-				opt.setPrimerOptTm((Double)pnlTabParam.getSpinOptTm().getValue());
-				opt.setPrimerMaxTm((Double)pnlTabParam.getSpinMaxTm().getValue());
-				opt.setPrimerMaxDiffTm((Double)pnlTabParam.getSpinTmDiff().getValue());
-
-				opt.setSearchSpecificPrimer(true);
-				opt.setPrimerSpecificityDatabase(RemotePrimerBlastNCBI.PrimerBlastOptions.Database.nt);
-				opt.setOrganism("29760");
-
-				opt.setPrimerSizeMin((Integer)pnlTabParam.getSpinMinPrimerSize().getValue());
-				opt.setPrimerSizeOpt((Integer)pnlTabParam.getSpinOptPrimerSize().getValue());
-				opt.setPrimerSizeMax((Integer)pnlTabParam.getSpinMaxPrimerSize().getValue());
-
-				opt.setGCMin((Double)pnlTabParam.getSpinMinGC().getValue());
-				opt.setGCMax((Double)pnlTabParam.getSpinMaxGC().getValue());
-				opt.setMaxGCEnd((Integer)pnlTabParam.getSpinMaxGCEnd().getValue());
-
-				opt.setThAlignment(true);
-				opt.setThSelfAny((Double)pnlTabThermo.getSpinTHAnyMaxSelfComp().getValue());
-				opt.setThSelfEnd((Double)pnlTabThermo.getSpinTHEndMaxSelfComp().getValue());
-				opt.setThPairAny((Double)pnlTabThermo.getSpinTHAnyMaxPairComp().getValue());
-				opt.setThPairEnd((Double)pnlTabThermo.getSpinTHEndMaxPairComp().getValue());
-				opt.setMaxHairpin((Double)pnlTabThermo.getSpinMaxPrimerHairpin().getValue());
-				
-				System.out.println("Prepare query...");
-				VitisPrimerQuery query = new VitisPrimerQuery(
-					fileChooserField.getFile().getName(), 
-					sequence, 
-					(Integer)pnlTabParam.getSpinLastSubSeqSize().getValue(), 
-					(Double)pnlTabThermo.getSpinAnyMaxSelfComp().getValue(),
-					(Double)pnlTabThermo.getSpinEndMaxSelfComp().getValue(),
-					opt
-				);
-				
-				System.out.println("Run analysis...");
-				try {
-					query.runAnalysis();
-				} catch (Exception e) {
-					if(e instanceof PrimerBlastHtmlParserException && e.getMessage().contains("is shorter than specified")) {
-						JOptionPane.showMessageDialog(
-							null,
-							"Error: the sequence length ("
-								+ sequence.length() 
-								+ ") is shorter than the product size specified ("
-								+ (Integer)pnlTabParam.getSpinMinProductSize().getValue()
-								+ "-"
-								+ (Integer)pnlTabParam.getSpinMaxProductSize().getValue() 
-								+ ")",
-							"Error: sequence lenght",
-							JOptionPane.ERROR_MESSAGE);
-					}
-					else
-						e.printStackTrace();
+				publish(steps[0]+"...");
+				{ // Retrieving sequence
+					setProgress(0);
 					
-					return;
+					seq = new AnnotatedSequence("Input sequence:");
+					
+					try {
+						String sequence = new String("");
+						BufferedReader in = new BufferedReader(new FileReader(fileChooserField.getFile().toString()));					
+						String line = null;
+						//String ls = System.getProperty("line.separator");
+						while( (line = in.readLine()) != null ) {
+							sequence = sequence+line;
+						}
+						in.close();
+						seq.add(SequencePartType.UNKNOWN, sequence, 0, sequence.length()-1);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+						return "";
+					} catch (IOException e) {
+						e.printStackTrace();
+						return "";
+					}
+					
+					printSequence(seq);
 				}
 				
-				setVisible(false);
-				Result res = new Result(parent);
-				res.printResult(seq, query);
-				res.setVisible(true);
+				publish(steps[1]+"...");
+				{ // Searching for primers
+					setProgress(1);
+					
+
+					System.out.println("Set options...");				
+					AdvancedPrimerBlastOptions opt = new AdvancedPrimerBlastOptions();
+					// PRIMERBLAST OPTIONS
+					opt = new AdvancedPrimerBlastOptions();
+
+					opt.setPrimerProductMin((Integer)pnlTabParam.getSpinMinProductSize().getValue());
+					opt.setPrimerProductMax((Integer)pnlTabParam.getSpinMaxProductSize().getValue());
+
+					opt.setPrimerNumReturn(30);
+
+					opt.setPrimerMinTm((Double)pnlTabParam.getSpinMinTm().getValue());
+					opt.setPrimerOptTm((Double)pnlTabParam.getSpinOptTm().getValue());
+					opt.setPrimerMaxTm((Double)pnlTabParam.getSpinMaxTm().getValue());
+					opt.setPrimerMaxDiffTm((Double)pnlTabParam.getSpinTmDiff().getValue());
+
+					opt.setSearchSpecificPrimer(true);
+					opt.setPrimerSpecificityDatabase(RemotePrimerBlastNCBI.PrimerBlastOptions.Database.nt);
+					opt.setOrganism("29760");
+
+					opt.setPrimerSizeMin((Integer)pnlTabParam.getSpinMinPrimerSize().getValue());
+					opt.setPrimerSizeOpt((Integer)pnlTabParam.getSpinOptPrimerSize().getValue());
+					opt.setPrimerSizeMax((Integer)pnlTabParam.getSpinMaxPrimerSize().getValue());
+
+					opt.setGCMin((Double)pnlTabParam.getSpinMinGC().getValue());
+					opt.setGCMax((Double)pnlTabParam.getSpinMaxGC().getValue());
+					opt.setMaxGCEnd((Integer)pnlTabParam.getSpinMaxGCEnd().getValue());
+
+					opt.setThAlignment(true);
+					opt.setThSelfAny((Double)pnlTabThermo.getSpinTHAnyMaxSelfComp().getValue());
+					opt.setThSelfEnd((Double)pnlTabThermo.getSpinTHEndMaxSelfComp().getValue());
+					opt.setThPairAny((Double)pnlTabThermo.getSpinTHAnyMaxPairComp().getValue());
+					opt.setThPairEnd((Double)pnlTabThermo.getSpinTHEndMaxPairComp().getValue());
+					opt.setMaxHairpin((Double)pnlTabThermo.getSpinMaxPrimerHairpin().getValue());
+					
+					System.out.println("Prepare query...");
+					VitisPrimerQuery query = new VitisPrimerQuery(
+						fileChooserField.getFile().getName(), 
+						seq.getSequence(), 
+						(Integer)pnlTabParam.getSpinLastSubSeqSize().getValue(), 
+						(Double)pnlTabThermo.getSpinAnyMaxSelfComp().getValue(),
+						(Double)pnlTabThermo.getSpinEndMaxSelfComp().getValue(),
+						opt
+					);
+					
+					System.out.println("Run analysis...");
+					try {
+						query.runAnalysis();
+					} catch (Exception e) {
+						if(e instanceof PrimerBlastHtmlParserException && e.getMessage().contains("is shorter than specified")) {
+							JOptionPane.showMessageDialog(
+								null,
+								"Error: the sequence length ("
+									+ seq.getSequenceLenght() 
+									+ ") is shorter than the product size specified ("
+									+ (Integer)pnlTabParam.getSpinMinProductSize().getValue()
+									+ "-"
+									+ (Integer)pnlTabParam.getSpinMaxProductSize().getValue() 
+									+ ")",
+								"Error: sequence lenght",
+								JOptionPane.ERROR_MESSAGE);
+						}
+						else
+							e.printStackTrace();
+						
+						return "";
+					}
+					
+					// Display results
+					printCouples(query.getPrimerSet().getPrimerCouples(), seq);
+				}
+				
+				return "";
 			}
 		};
+		
+		window.run(worker, steps);
+		worker.execute();
 	}
-
 	
 }

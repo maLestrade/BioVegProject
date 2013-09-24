@@ -7,10 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
-import ui.LoadingWindow;
-import ui.Result;
 import ui.field.TabBasicParams;
 import ui.field.TabThermoParams;
+import ui.worker.ResultWindow;
+import ui.worker.ResultWorker;
 import apollo.analysis.RemotePrimerBlastNCBI;
 import core.genoscope.GenoscopeVitisSequenceQuery;
 import core.primerblast.AdvancedPrimerBlastOptions;
@@ -93,78 +93,92 @@ public class PanelProcess1 extends PanelProcess {
 
 	@Override
 	protected void run() {
+		final String[] steps = {"Retrieving sequence", "Searching for primers"};
+
+		ResultWindow window = new ResultWindow(parent);
+		window.setVisible(true);
 		
-		new LoadingWindow("Retrieving Genoscope Sequence", parent) {
+		ResultWorker worker = new ResultWorker(window) {
 			@Override
-			public void process() {
-
+			protected String doInBackground() throws Exception {
 				AnnotatedSequence seq = null;
-				try {
-					GenoscopeVitisSequenceQuery gvsq = new GenoscopeVitisSequenceQuery(txtAccNum.getText());
-					seq = gvsq.getAnnotatedSequence();
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-
-				//JOptionPane.showMessageDialog(null, seq.getSequence());
-				setMessage("Searching for primers");
 				
-				AdvancedPrimerBlastOptions opt = new AdvancedPrimerBlastOptions();
-				// PRIMERBLAST OPTIONS
-				opt = new AdvancedPrimerBlastOptions();
-
-				opt.setPrimerProductMin((Integer)pnlTabParam.getSpinMinProductSize().getValue());
-				opt.setPrimerProductMax((Integer)pnlTabParam.getSpinMaxProductSize().getValue());
-
-				opt.setPrimerNumReturn(30);
-
-				opt.setPrimerMinTm((Double)pnlTabParam.getSpinMinTm().getValue());
-				opt.setPrimerOptTm((Double)pnlTabParam.getSpinOptTm().getValue());
-				opt.setPrimerMaxTm((Double)pnlTabParam.getSpinMaxTm().getValue());
-				opt.setPrimerMaxDiffTm((Double)pnlTabParam.getSpinTmDiff().getValue());
-
-				opt.setSearchSpecificPrimer(true);
-				opt.setPrimerSpecificityDatabase(RemotePrimerBlastNCBI.PrimerBlastOptions.Database.nt);
-				opt.setOrganism("29760");
-
-				opt.setPrimerSizeMin((Integer)pnlTabParam.getSpinMinPrimerSize().getValue());
-				opt.setPrimerSizeOpt((Integer)pnlTabParam.getSpinOptPrimerSize().getValue());
-				opt.setPrimerSizeMax((Integer)pnlTabParam.getSpinMaxPrimerSize().getValue());
-
-				opt.setGCMin((Double)pnlTabParam.getSpinMinGC().getValue());
-				opt.setGCMax((Double)pnlTabParam.getSpinMaxGC().getValue());
-				opt.setMaxGCEnd((Integer)pnlTabParam.getSpinMaxGCEnd().getValue());
-
-				opt.setThAlignment(true);
-				opt.setThSelfAny((Double)pnlTabThermo.getSpinTHAnyMaxSelfComp().getValue());
-				opt.setThSelfEnd((Double)pnlTabThermo.getSpinTHEndMaxSelfComp().getValue());
-				opt.setThPairAny((Double)pnlTabThermo.getSpinTHAnyMaxPairComp().getValue());
-				opt.setThPairEnd((Double)pnlTabThermo.getSpinTHEndMaxPairComp().getValue());
-				opt.setMaxHairpin((Double)pnlTabThermo.getSpinMaxPrimerHairpin().getValue());
-				
-				VitisPrimerQuery query = new VitisPrimerQuery(
-					txtAccNum.getText(), 
-					seq.getSequence(), 
-					(Integer)pnlTabParam.getSpinLastSubSeqSize().getValue(), 
-					(Double)pnlTabThermo.getSpinAnyMaxSelfComp().getValue(),
-					(Double)pnlTabThermo.getSpinEndMaxSelfComp().getValue(),
-					opt
-				);
-				
-				try {
-					query.runAnalysis();
-				} catch (Exception e) {
-					e.printStackTrace();
-					return;
+				publish(steps[0]+"...");
+				{ // Retrieving sequence
+					setProgress(0);
+					
+					try {
+						GenoscopeVitisSequenceQuery gvsq = new GenoscopeVitisSequenceQuery(txtAccNum.getText());
+						seq = gvsq.getAnnotatedSequence();
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(null, "Error: "+e.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
+						return "";
+					}
+					printSequence(seq);
 				}
 				
-				// Display results
-				setVisible(false);
-				Result res = new Result(parent);
-				res.printResult(seq, query);
-				res.setVisible(true);
+				publish(steps[1]+"...");
+				{ // Searching for primers
+					setProgress(1);
+					
+					AdvancedPrimerBlastOptions opt = new AdvancedPrimerBlastOptions();
+					// PRIMERBLAST OPTIONS
+					opt = new AdvancedPrimerBlastOptions();
+
+					opt.setPrimerProductMin((Integer)pnlTabParam.getSpinMinProductSize().getValue());
+					opt.setPrimerProductMax((Integer)pnlTabParam.getSpinMaxProductSize().getValue());
+
+					opt.setPrimerNumReturn(30);
+
+					opt.setPrimerMinTm((Double)pnlTabParam.getSpinMinTm().getValue());
+					opt.setPrimerOptTm((Double)pnlTabParam.getSpinOptTm().getValue());
+					opt.setPrimerMaxTm((Double)pnlTabParam.getSpinMaxTm().getValue());
+					opt.setPrimerMaxDiffTm((Double)pnlTabParam.getSpinTmDiff().getValue());
+
+					opt.setSearchSpecificPrimer(true);
+					opt.setPrimerSpecificityDatabase(RemotePrimerBlastNCBI.PrimerBlastOptions.Database.nt);
+					opt.setOrganism("29760");
+
+					opt.setPrimerSizeMin((Integer)pnlTabParam.getSpinMinPrimerSize().getValue());
+					opt.setPrimerSizeOpt((Integer)pnlTabParam.getSpinOptPrimerSize().getValue());
+					opt.setPrimerSizeMax((Integer)pnlTabParam.getSpinMaxPrimerSize().getValue());
+
+					opt.setGCMin((Double)pnlTabParam.getSpinMinGC().getValue());
+					opt.setGCMax((Double)pnlTabParam.getSpinMaxGC().getValue());
+					opt.setMaxGCEnd((Integer)pnlTabParam.getSpinMaxGCEnd().getValue());
+
+					opt.setThAlignment(true);
+					opt.setThSelfAny((Double)pnlTabThermo.getSpinTHAnyMaxSelfComp().getValue());
+					opt.setThSelfEnd((Double)pnlTabThermo.getSpinTHEndMaxSelfComp().getValue());
+					opt.setThPairAny((Double)pnlTabThermo.getSpinTHAnyMaxPairComp().getValue());
+					opt.setThPairEnd((Double)pnlTabThermo.getSpinTHEndMaxPairComp().getValue());
+					opt.setMaxHairpin((Double)pnlTabThermo.getSpinMaxPrimerHairpin().getValue());
+					
+					VitisPrimerQuery query = new VitisPrimerQuery(
+						txtAccNum.getText(), 
+						seq.getSequence(), 
+						(Integer)pnlTabParam.getSpinLastSubSeqSize().getValue(), 
+						(Double)pnlTabThermo.getSpinAnyMaxSelfComp().getValue(),
+						(Double)pnlTabThermo.getSpinEndMaxSelfComp().getValue(),
+						opt
+					);
+					
+					try {
+						query.runAnalysis();
+					} catch (Exception e) {
+						e.printStackTrace();
+						return "";
+					}
+					
+					// Display results
+					printCouples(query.getPrimerSet().getPrimerCouples(), seq);
+				}
+				
+				return "";
 			}
 		};
+		
+		window.run(worker, steps);
+		worker.execute();
 	}
 }

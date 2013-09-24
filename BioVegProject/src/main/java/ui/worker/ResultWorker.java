@@ -1,6 +1,5 @@
 package ui.worker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingWorker;
@@ -18,55 +17,52 @@ public abstract class ResultWorker extends SwingWorker<String, String> {
 		this.resultWindow = resultWindow;
 	}
 	
-	public List<String> printSequence(AnnotatedSequence seq) {
-		ArrayList<String> out = new ArrayList<String>(2);
-		out.add(">" + seq.getName());
-		out.add(seq.getSequence().replaceAll("(.{60})", "$1\n"));
-		return out;
+	public void printSequence(AnnotatedSequence seq) {
+		publish(
+			">" + seq.getName(),
+			seq.getSequence(),
+			"\n"
+		);
 	}
 	
-	public List<String> printCouples(List<PrimerCouple> chunks, AnnotatedSequence annotatedSequence) {
-		final int size = chunks.size()*23 + 1;
-		final ArrayList<String> buff = new ArrayList<String>(size);
-		
+	public void printCouples(List<PrimerCouple> chunks, AnnotatedSequence annotatedSequence) {
 		for (PrimerCouple couple : chunks) {
-			buff.add("#############" + "\n");
+			publish("#############");
 			
 			Primer forward = couple.getForward();
 			Primer reverse = couple.getReverse();
 			
-			buff.add("Forward : "	+ forward.getName() 		+ "\n");
-			buff.add("Seq : "		+ forward.getHybridSite() 	+ "\n");
-			buff.add("Start : "		+ forward.getStart() 		+ "\n");
-			buff.add("End : "		+ forward.getEnd() 			+ "\n");
-			buff.add("Tm : "		+ forward.getTm() 			+ "\n");
-			buff.add("GC% : "		+ forward.getGc() 			+ "\n");
-			buff.add("Self : "		+ forward.getSelfCompAny() 	+ "\n");
-			buff.add("Self 3' : "	+ forward.getSelfCompEnd() 	+ "\n");
+			publish("Forward : "	+ forward.getName() 	);
+			publish("Seq : "		+ forward.getHybridSite());
+			publish("Start : "		+ forward.getStart() 	);
+			publish("End : "		+ forward.getEnd() 		);
+			publish("Tm : "			+ forward.getTm() 		);
+			publish("GC% : "		+ forward.getGc() 		);
+			publish("Self : "		+ forward.getSelfCompAny());
+			publish("Self 3' : "	+ forward.getSelfCompEnd());
 			
-			buff.add("-" + "\n");
+			publish("-");
 			
-			buff.add("Reverse : "	+ reverse.getName() 		+ "\n");
-			buff.add("Seq : "		+ reverse.getHybridSite() 	+ "\n");
-			buff.add("Start : "		+ reverse.getStart() 		+ "\n");
-			buff.add("End : "		+ reverse.getEnd() 			+ "\n");
-			buff.add("Tm : "		+ reverse.getTm() 			+ "\n");
-			buff.add("GC% : "		+ reverse.getGc() 			+ "\n");
-			buff.add("Self : "		+ reverse.getSelfCompAny() 	+ "\n");
-			buff.add("Self 3' : "	+ reverse.getSelfCompEnd() 	+ "\n");
+			publish("Reverse : "	+ reverse.getName() 	);
+			publish("Seq : "		+ reverse.getHybridSite());
+			publish("Start : "		+ reverse.getStart() 	);
+			publish("End : "		+ reverse.getEnd() 		);
+			publish("Tm : "			+ reverse.getTm() 		);
+			publish("GC% : "		+ reverse.getGc() 		);
+			publish("Self : "		+ reverse.getSelfCompAny());
+			publish("Self 3' : "	+ reverse.getSelfCompEnd());
 			
-			buff.add("=> score : "   + couple.getScore()		+ "\n");
+			publish("=> score : "   + couple.getScore()	);
 	
-			buff.add("\n" + "The generated amplicon will be on :" + "\n");
-	
+			publish("\n" + "The generated amplicon will be on :");
+			String parts = "";
 			for(SequencePartType t : annotatedSequence.getPartTypesFromPositions(forward.getStart(), reverse.getStart())) {
-				buff.add(t+" ");
+				parts += t+" ";
 			}
-			buff.add("\n\n");
+			publish(parts+"\n");
 		}
-		buff.add("#############" + "\n");
+		publish("#############");
 		
-		return buff;
 	}
 	
 	@Override
