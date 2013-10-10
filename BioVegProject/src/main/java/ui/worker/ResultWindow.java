@@ -6,6 +6,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -24,7 +25,8 @@ public class ResultWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private final JLabel lblProgressMessage;
-	private final JXBusyLabel progressBar;
+	//private final JXBusyLabel progressBar;
+	private final JLabel progressBar;
 	private final JTextArea txtAResult;	
 
 	public ResultWindow(JFrame parent) {
@@ -36,7 +38,13 @@ public class ResultWindow extends JFrame {
 			//lblProgressMessage.setVisible(false);
 			add(lblProgressMessage, "grow");
 
-			this.progressBar = new JXBusyLabel();
+			this.progressBar = new JLabel();
+			try {
+				progressBar.setIcon( new ImageIcon(ResultWindow.class.getResource("loader.gif")));
+			} catch (Exception e) {
+				progressBar.setText("[LOADING]");
+			}
+			//this.progressBar = new JXBusyLabel();
 			//progressBar.setVisible(false);
 			add(progressBar, "grow, wrap");
 		}
@@ -83,29 +91,26 @@ public class ResultWindow extends JFrame {
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				//System.out.println(event);
-				switch (event.getPropertyName()) {
-					case "progress":
-						if(stepNames != null) {
-							final int step = (int) event.getNewValue();
-							
-							if(step<stepNames.length) {
-								setProgessMessage(stepNames[step]);
-							}
+				if(event.getPropertyName().equals("progress")) {
+					if(stepNames != null) {
+						final int step = (Integer) event.getNewValue();
+						
+						if(step<stepNames.length) {
+							setProgessMessage(stepNames[step]);
 						}
-						break;
-					case "state":
-						switch ((StateValue) event.getNewValue()) {
-							case STARTED:
-								setProgessMessage(stepNames[0]);
-								progressStart();
-								break;
-							case DONE:
-								progressDone();
-								break;
-							default: break;
-						}
-						break;
-					default: break;
+					}
+				}
+				else if(event.getPropertyName().equals("state")) {
+					switch ((StateValue) event.getNewValue()) {
+						case STARTED:
+							setProgessMessage(stepNames[0]);
+							progressStart();
+							break;
+						case DONE:
+							progressDone();
+							break;
+						default: break;
+					}
 				}
 				repaint();
 			}
